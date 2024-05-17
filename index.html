@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Metronome & MIDI Logger</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Metronome & MIDI Logger</h1>
+
+  <div class="controls">
+    <button id="start-button">Start Metronome</button>
+    <button id="stop-button">Stop Metronome</button>
+  </div>
+
+  <div class="midi-log">
+    <h2>MIDI Events</h2>
+    <textarea id="midi-log-area" readonly></textarea>
+  </div>
+
+  <div class="midi-player">
+    <h2>MIDI Player</h2>
+    <textarea id="midi-player-area"></textarea>
+    <button id="play-button">Play</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

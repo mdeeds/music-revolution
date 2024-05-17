@@ -1,0 +1,13 @@
+body {
+  font-family: sans-serif;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.midi-log textarea {
+  width: 500px;
+  height: 200px;
+  resize: vertical;
+}
