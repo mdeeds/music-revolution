@@ -1,7 +1,8 @@
 class Metronome {
-    constructor(bpm = 120) {
+    constructor(audioContext, bpm = 120) {
+		this.audioContext = audioContext;
         this.bpm = bpm;
-        this.audioContext = new AudioContext();
+
         this.oscillator = null;
         this.intervalId = null;
         
@@ -57,22 +58,30 @@ class Metronome {
 }
 
 class MidiLogger {
-    constructor(textArea, bpm = 120) {
+    constructor(textArea, autioContext, bpm = 120) {
         this.bpm = bpm;
         this.textArea = textArea;
         this.lastNoteTime = 0;
-        this.midiInput = null;
-        this.midiOutput = null;
+		this.audioContext = audioContext;
     }
     
     connect() {
         if (navigator.requestMIDIAccess) {
             navigator.requestMIDIAccess().then(midiAccess => {
-                this.midiInput = Array.from(midiAccess.inputs.values())[0];
-                this.midiInput.onmidimessage = this.handleMidiMessage.bind(this);
-                this.midiOutput = Array.from(midiAccess.outputs.values())[0];
-                
-                console.log('MIDI Connected');
+				for (const input of midiAccess.inputs.values()) {
+					console.log(input);
+					input.open();
+					input.onstatechange = () => {
+						if (input.state === 'connected') {
+							// Input port is now connected and ready
+                            input.onmidimessage = this.handleMidiMessage.bind(this);
+                            console.log('MIDI Connected');
+							console.log(input);
+						} else {
+							console.log(`Failed: ${input.state}`);
+						}							
+                    };
+				}
             }, error => console.error('MIDI Error:', error));
         } else {
             console.error('Web MIDI API not supported');
@@ -89,6 +98,7 @@ class MidiLogger {
     
     handleMidiMessage(message) {
         const data = message.data;
+		if (data[0] != 248) console.log(data);
         if (data.length != 3) {
             // Note on and note off events are always 3 bytes.
             // 0xEC 0xNN 0xVV
@@ -103,10 +113,15 @@ class MidiLogger {
         }
         const noteNumber = data[1];
         const noteName = this.getNoteName(noteNumber);
-        const nowTime = this.audoContext.currentTime;
+        const nowTime = this.audioContext.currentTime;
         
-        let timeDelta = (getNoteOffset(nowTime) -
-                         getNoteOffset(this.lastNoteTime));
+        let timeDelta = (this.getNoteOffset(nowTime) -
+                         this.getNoteOffset(this.lastNoteTime));
+						 
+		if (timeDelta > 48) {
+			this.textArea.value += "\n";
+			timeDelta = 0;
+		}
 
         if (eventType == 0x90 && data[2] > 0) { // Note On
             this.textArea.value += timeDelta + ' + ' + noteName + ' ' ;
@@ -158,7 +173,7 @@ class MidiPlayer {
             const gainNode = this.noteMap.get(noteName).gainNode;
 
             if (isNoteOn) {
-                gainNode.gain.setValueAtTime(0.3, currentTime);
+                gainNode.gain.setValueAtTime(0.1, currentTime);
             } else {
                 gainNode.gain.setValueAtTime(0.0, currentTime);
             }
@@ -175,7 +190,7 @@ class MidiPlayer {
         gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
         oscillator.frequency.setValueAtTime(
             this.getFrequency(noteName), this.audioContext.currentTime);
-        oscillator.type = 'sine';
+        oscillator.type = 'square';
         oscillator.connect(gainNode);
         gainNode.connect(this.audioContext.destination);
         oscillator.start();
@@ -201,9 +216,9 @@ class MidiPlayer {
     }
 }
 
-
-const metronome = new Metronome();
-const midiLogger = new MidiLogger(document.getElementById('midi-log-area'));
+const audioContext = new AudioContext();	
+const metronome = new Metronome(audioContext);
+const midiLogger = new MidiLogger(document.getElementById('midi-log-area'), audioContext);
 midiLogger.connect();
 
 document.getElementById('start-button').addEventListener('click', () => {

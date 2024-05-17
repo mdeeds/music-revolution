@@ -7,7 +7,13 @@ body {
 }
 
 .midi-log textarea {
-  width: 500px;
+  width: 90vw;
   height: 200px;
-  resize: vertical;
+  resize: both;
+}
+
+.midi-player textarea {
+  width: 90vw;
+  height: 200px;
+  resize: both;
 }
