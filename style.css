@@ -1,7 +1,7 @@
 body {
-  font-family: 'Arial', sans-serif; /* Choose a professional font */
-  background-color: #f8f8f8; /* Light gray background */
-  color: #333; /* Dark gray text */
+  font-family: 'Arial', sans-serif; 
+  background-color: #222831; /* Dark green background */
+  color: #fff; /* White text for contrast */
   margin: 0;
   padding: 0;
   display: flex;
@@ -12,14 +12,14 @@ body {
 }
 
 h1 {
-  color: #007bff; /* Blue header color */
+  color: #FFD700; /* Bright Yellow */
   font-size: 2.5rem;
   margin-bottom: 2rem;
   text-align: center;
 }
 
 h2 {
-  color: #333; /* Dark gray header color */
+  color: #fff; /* White */
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
@@ -32,8 +32,8 @@ h2 {
 }
 
 button {
-  background-color: #007bff; /* Blue button color */
-  color: #fff;
+  background-color: #FFD700; /* Yellow */
+  color: #222831; /* Dark Green */
   border: none;
   padding: 10px 20px;
   font-size: 1rem;
@@ -43,41 +43,47 @@ button {
 }
 
 button:hover {
-  background-color: #0062cc; /* Darker blue on hover */
+  background-color: #FFC107; /* Lighter Yellow */
 }
 
 .midi-log {
-  background-color: #fff; /* White background for log */
+  background-color: #904569; /* Purple, matching the brain section */
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   width: 80%;
-  max-width: 600px; /* Set a maximum width for log area */
+  max-width: 600px;
 }
 
 .midi-log-line {
-  outline: 1px solid #ddd; /* Light gray border for lines */
+  outline: 1px solid #ddd; 
   padding: 10px;
   margin-bottom: 10px;
 }
 
 .midi-player {
-  background-color: #fff; /* White background for player */
+  background-color: #904569; /* Same purple as log */
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   width: 80%;
-  max-width: 600px; /* Set a maximum width for player area */
+  max-width: 600px; 
   margin-top: 2rem;
 }
 
 .midi-player textarea {
-  width: calc(100% - 20px); /* Adjust textarea width to fit */
+  width: calc(100% - 20px);
   height: 200px;
   resize: both;
-  border: 1px solid #ddd; /* Light gray border for textarea */
+  border: 1px solid #ddd; 
   padding: 10px;
-  font-family: 'Courier New', monospace; /* Monospace font for MIDI */
+  font-family: 'Courier New', monospace; 
+  color: #fff; /* White text for textarea */
+  background-color: #333; /* Dark gray background for textarea */
+}
+
+.midi-log, .midi-player {
+  color: #FFD700; /* Yellow text for log and player areas */
 }
 
 img {
