@@ -58,11 +58,17 @@ class Metronome {
 }
 
 class MidiLogger {
-    constructor(textArea, autioContext, bpm = 120) {
+    constructor(textContainer, autioContext, bpm = 120) {
         this.bpm = bpm;
-        this.textArea = textArea;
+        this.textContainer = textContainer
+        this.textArea = document.createElement('div');
+        this.textArea.classList.add('midi-log-line');
+        this.textArea.innerHTML = '&nbsp;';
+        this.textContainer.appendChild(this.textArea);
         this.lastNoteTime = 0;
-		this.audioContext = audioContext;
+		    this.audioContext = audioContext;
+        this.notes = [];
+        this.currentNotes = new Map();
     }
     
     connect() {
@@ -98,7 +104,8 @@ class MidiLogger {
     
     handleMidiMessage(message) {
         const data = message.data;
-		if (data[0] != 248) console.log(data);
+        // Enable this for debugging to log MIDI data to the console.
+		    // if (data[0] != 248) console.log(data);
         if (data.length != 3) {
             // Note on and note off events are always 3 bytes.
             // 0xEC 0xNN 0xVV
@@ -114,29 +121,51 @@ class MidiLogger {
         const noteNumber = data[1];
         const noteName = this.getNoteName(noteNumber);
         const nowTime = this.audioContext.currentTime;
-        
         let timeDelta = (this.getNoteOffset(nowTime) -
                          this.getNoteOffset(this.lastNoteTime));
-						 
-		if (timeDelta > 48) {
-			this.textArea.value += "\n";
-			timeDelta = 0;
-		}
 
-        if (eventType == 0x90 && data[2] > 0) { // Note On
-            this.textArea.value += timeDelta + ' + ' + noteName + ' ' ;
-        } else if (eventType == 0x80 || eventType == 0x90) { // Note Off
-            this.textArea.value += timeDelta + ' - ' + noteName + ' ';
-        }
+        // If there is a gap larger than 4 beats, we create a new line.
+        // 4 beats = 48 twelths of a beat, so we compare timeDelta to 48.
+		    if (timeDelta > 48) {
+			      this.textArea = document.createElement('div');
+            this.textContainer.appendChild(this.textArea);
+            this.currentNotes.clear();
+			      timeDelta = 0;
+		    }
         
-        this.lastNoteTime = nowTime;
+        if (eventType == 0x90 && data[2] > 0) { // Note On
+            this.currentNotes.set(noteName, {startTime: nowTime});
+            this.lastNoteTime = nowTime;
+        } else if (eventType == 0x80 || eventType == 0x90) { // Note Off
+            if (this.currentNotes.has(noteName)) {
+                const note = this.currentNotes.get(noteName);
+                note.noteName = noteName;
+                note.duration = this.getNoteOFfset(nowTime) - this.getNoteOffset(note.startTime);
+                this.notes.push(note);
+                this.updateTextArea();
+            }
+        }
+    }
+
+    updateTextArea() {
+        let output = "";
+        if (this.notes.length > 0) {
+            // Sort notes by start time
+            this.notes.sort((a, b) => a.startTime - b.startTime);
+            let lastNoteTime = this.notes[0].startTime;
+            for (const note of this.notes) {
+                const timeDelta = getNoteOffset(note.startTime) - getNoteOffset(lastNoteTime);
+                output += timeDelta + " " + note.duration + " " + note.noteName + " ";
+            }
+        }
+        this.textArea.innerHTML = output;
     }
     
     getNoteName(noteNumber) {
         const notes = ['C', 'C#', 'D', 'D#', 'E', 'F',
                        'F#', 'G', 'G#', 'A', 'A#', 'B'];
-        const octave = Math.floor((noteNumber - 21) / 12);
-        const noteIndex = (noteNumber - 21) % 12;
+        const octave = Math.floor((noteNumber - 24) / 12);
+        const noteIndex = (noteNumber - 24) % 12;
         return notes[noteIndex] + octave;
     }
 }
@@ -202,7 +231,9 @@ class MidiPlayer {
                        'F#', 'G', 'G#', 'A', 'A#', 'B'];
         const octave = parseInt(noteName.slice(-1));
         const noteIndex = notes.indexOf(noteName.slice(0, -1));
-        return 440 * Math.pow(2, (noteIndex + (octave - 4) * 12) / 12);
+        // C0 is MIDI note 12.
+        const midiNote = noteIndex + (12 * octave) + 12;
+        return 440 * Math.pow(2, (midiNote - 69) / 12); 
     }
 
     stop() {

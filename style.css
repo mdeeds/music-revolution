@@ -6,10 +6,12 @@ body {
   margin-bottom: 20px;
 }
 
-.midi-log textarea {
+#midi-log-area {
   width: 90vw;
-  height: 200px;
-  resize: both;
+}
+
+.midi-log-line {
+    outline: 1px solid lightgrey;
 }
 
 .midi-player textarea {
