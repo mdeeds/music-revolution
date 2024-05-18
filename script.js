@@ -245,10 +245,61 @@ class MidiPlayer {
     }
 }
 
+class SpeechToText {
+    constructor(container) {
+        this.container = container;
+        this.currentTranscript = '';
+        const SpeechRecognition =
+              window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        this.recognition = new SpeechRecognition();
+        this.recognition.continuous = true;
+        this.recognition.interimResults = true;
+        this.recognition.onresult = this.handleResult.bind(this);
+        this.recognition.onend = this.start.bind(this);
+        this.outputDiv = undefined;
+    }
+
+    start() {
+        console.log('Starting speech recognition');
+        this.recognition.start();
+    }
+
+    stop() {
+        this.recognition.stop();
+    }
+
+    handleResult(event) {
+        if (event.isFinal) {
+            console.log('Completed recognition');
+        }
+        const transcript = event.results[event.resultIndex].transcript;
+        if (!transcript) return;
+
+        if (!this.currentTranscript) {
+            // Create an empty div for the first transcript
+            this.outputDiv = document.createElement('div');
+            this.container.appendChild(this.outputDiv);
+        }
+
+        this.outputDiv.innerText = transcript;
+        this.currentTranscript = transcript;
+
+        // Reset currentTranscript when transcription is final
+        if (event.isFinal) {
+            this.currentTranscript = null;
+        }
+    }
+}
+
 const audioContext = new AudioContext();	
 const metronome = new Metronome(audioContext);
 const midiLogger = new MidiLogger(document.getElementById('midi-log-area'), audioContext);
 midiLogger.connect();
+const speechLogger = new SpeechToText(document.getElementById('midi-log-area'));
+document.body.addEventListener('click', speechLogger.start.bind(speechLogger));
+
+
 
 document.getElementById('start-button').addEventListener('click', () => {
     metronome.start();
