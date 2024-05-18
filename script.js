@@ -256,16 +256,24 @@ class SpeechToText {
         this.recognition.continuous = true;
         this.recognition.interimResults = true;
         this.recognition.onresult = this.handleResult.bind(this);
-        this.recognition.onend = this.start.bind(this);
+        this.recognition.onend = () => {
+            if (this.capturing) {
+                this.start();
+            }
+        };
         this.outputDiv = undefined;
+        this.capturing = false;
     }
 
     start() {
         console.log('Starting speech recognition');
+        this.capturing = true;
         this.recognition.start();
     }
 
     stop() {
+        console.log('Stopping speech recognition');
+        this.capturing = false;
         this.recognition.stop();
     }
 
@@ -297,17 +305,11 @@ const metronome = new Metronome(audioContext);
 const midiLogger = new MidiLogger(document.getElementById('midi-log-area'), audioContext);
 midiLogger.connect();
 const speechLogger = new SpeechToText(document.getElementById('midi-log-area'));
-document.body.addEventListener('click', speechLogger.start.bind(speechLogger));
 
-
-
-document.getElementById('start-button').addEventListener('click', () => {
-    metronome.start();
-});
-
-document.getElementById('stop-button').addEventListener('click', () => {
-    metronome.stop();
-});
+document.getElementById('start-button').addEventListener('click', metronome.start.bind(metronome));
+document.getElementById('stop-button').addEventListener('click', metronome.stop.bind(metronome));
+document.getElementById('start-stt').addEventListener('click', speechLogger.start.bind(speechLogger));
+document.getElementById('stop-stt').addEventListener('click', speechLogger.stop.bind(speechLogger));
 
 const midiPlayer = new MidiPlayer(metronome.audioContext);
 

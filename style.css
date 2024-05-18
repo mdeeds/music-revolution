@@ -1,21 +1,87 @@
 body {
-  font-family: sans-serif;
+  font-family: 'Arial', sans-serif; /* Choose a professional font */
+  background-color: #f8f8f8; /* Light gray background */
+  color: #333; /* Dark gray text */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+h1 {
+  color: #007bff; /* Blue header color */
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+h2 {
+  color: #333; /* Dark gray header color */
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .controls {
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 2rem;
 }
 
-#midi-log-area {
-  width: 90vw;
+button {
+  background-color: #007bff; /* Blue button color */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #0062cc; /* Darker blue on hover */
+}
+
+.midi-log {
+  background-color: #fff; /* White background for log */
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 600px; /* Set a maximum width for log area */
 }
 
 .midi-log-line {
-    outline: 1px solid lightgrey;
+  outline: 1px solid #ddd; /* Light gray border for lines */
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.midi-player {
+  background-color: #fff; /* White background for player */
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 600px; /* Set a maximum width for player area */
+  margin-top: 2rem;
 }
 
 .midi-player textarea {
-  width: 90vw;
+  width: calc(100% - 20px); /* Adjust textarea width to fit */
   height: 200px;
   resize: both;
+  border: 1px solid #ddd; /* Light gray border for textarea */
+  padding: 10px;
+  font-family: 'Courier New', monospace; /* Monospace font for MIDI */
+}
+
+img {
+    max-width: 50px;
+    height: 50px;
+    margin-left: 5px;
 }
