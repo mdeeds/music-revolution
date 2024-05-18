@@ -190,10 +190,11 @@ class MidiPlayer {
 
         for (let i = 0; i < notes.length; i += 3) {
             const timeDelta = parseFloat(notes[i]);
-            const isNoteOn = notes[i + 1] === '+';
+            const duration = parseFloat(notes[i+1]);
             const noteName = notes[i + 2];
 
             currentTime += timeDelta * (60.0 / this.bpm / 12);
+            const endTime = currentTime + duration * (60.0 / this.bpm / 12);
 
             if (!this.noteMap.has(noteName)) {
                 this.createNote(noteName);
@@ -201,11 +202,8 @@ class MidiPlayer {
 
             const gainNode = this.noteMap.get(noteName).gainNode;
 
-            if (isNoteOn) {
-                gainNode.gain.setValueAtTime(0.1, currentTime);
-            } else {
-                gainNode.gain.setValueAtTime(0.0, currentTime);
-            }
+            gainNode.gain.setValueAtTime(0.1, currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.0, endTime);
         }
 
         // Schedule the cleanup after the last note
