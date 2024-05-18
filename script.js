@@ -124,13 +124,15 @@ class MidiLogger {
         let timeDelta = (this.getNoteOffset(nowTime) -
                          this.getNoteOffset(this.lastNoteTime));
 
-        // If there is a gap larger than 4 beats, we create a new line.
-        // 4 beats = 48 twelths of a beat, so we compare timeDelta to 48.
-		    if (timeDelta > 48) {
+        // If there is a gap larger than 6 beats, we create a new line.
+        // 6 beats = 72 twelths of a beat, so we compare timeDelta to 72.
+		    if (timeDelta > 72) {
 			      this.textArea = document.createElement('div');
+				  this.textArea.classList.add('midi-log-line');
             this.textContainer.appendChild(this.textArea);
             this.currentNotes.clear();
 			      timeDelta = 0;
+				  this.notes = [];
 		    }
         
         if (eventType == 0x90 && data[2] > 0) { // Note On
@@ -140,7 +142,7 @@ class MidiLogger {
             if (this.currentNotes.has(noteName)) {
                 const note = this.currentNotes.get(noteName);
                 note.noteName = noteName;
-                note.duration = this.getNoteOFfset(nowTime) - this.getNoteOffset(note.startTime);
+                note.duration = this.getNoteOffset(nowTime) - this.getNoteOffset(note.startTime);
                 this.notes.push(note);
                 this.updateTextArea();
             }
@@ -154,8 +156,9 @@ class MidiLogger {
             this.notes.sort((a, b) => a.startTime - b.startTime);
             let lastNoteTime = this.notes[0].startTime;
             for (const note of this.notes) {
-                const timeDelta = getNoteOffset(note.startTime) - getNoteOffset(lastNoteTime);
+                const timeDelta = this.getNoteOffset(note.startTime) - this.getNoteOffset(lastNoteTime);
                 output += timeDelta + " " + note.duration + " " + note.noteName + " ";
+				lastNoteTime = note.startTime;
             }
         }
         this.textArea.innerHTML = output;
@@ -230,7 +233,7 @@ class MidiPlayer {
         const octave = parseInt(noteName.slice(-1));
         const noteIndex = notes.indexOf(noteName.slice(0, -1));
         // C0 is MIDI note 12.
-        const midiNote = noteIndex + (12 * octave) + 12;
+        const midiNote = noteIndex + (12 * octave) + 24;
         return 440 * Math.pow(2, (midiNote - 69) / 12); 
     }
 
@@ -255,7 +258,11 @@ class SpeechToText {
         this.recognition = new SpeechRecognition();
         this.recognition.continuous = true;
         this.recognition.interimResults = true;
-        this.recognition.onresult = this.handleResult.bind(this);
+        this.recognition.addEventListener('result',  this.handleResult.bind(this));
+		this.recognition.addEventListener('soundstart', (event) => { console.log(event) });
+		this.recognition.addEventListener('speechstart', (event) => { console.log(event) });
+		this.recognition.addEventListener('error', (event) => { console.log(event) });
+		this.recognition.addEventListener('nomatch', (event) => { console.log(event) });
         this.recognition.onend = () => {
             if (this.capturing) {
                 this.start();
@@ -278,15 +285,15 @@ class SpeechToText {
     }
 
     handleResult(event) {
-        if (event.isFinal) {
-            console.log('Completed recognition');
-        }
-        const transcript = event.results[event.resultIndex].transcript;
+		console.log(event);
+        const transcript = event.results[event.resultIndex][0].transcript;
         if (!transcript) return;
+		console.log(transcript);
 
         if (!this.currentTranscript) {
             // Create an empty div for the first transcript
             this.outputDiv = document.createElement('div');
+			this.outputDiv.classList.add('midi-log-line');
             this.container.appendChild(this.outputDiv);
         }
 
@@ -294,7 +301,7 @@ class SpeechToText {
         this.currentTranscript = transcript;
 
         // Reset currentTranscript when transcription is final
-        if (event.isFinal) {
+        if (event.results[event.resultIndex].isFinal) {
             this.currentTranscript = null;
         }
     }
