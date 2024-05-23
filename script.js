@@ -136,29 +136,95 @@ class MidiLogger {
 		    }
         
         if (eventType == 0x90 && data[2] > 0) { // Note On
-            this.currentNotes.set(noteName, {startTime: nowTime});
-            this.lastNoteTime = nowTime;
+            this.handleNoteOn(noteName, nowTime);
         } else if (eventType == 0x80 || eventType == 0x90) { // Note Off
-            if (this.currentNotes.has(noteName)) {
-                const note = this.currentNotes.get(noteName);
-                note.noteName = noteName;
-                note.duration = this.getNoteOffset(nowTime) - this.getNoteOffset(note.startTime);
-                this.notes.push(note);
-                this.updateTextArea();
-            }
+            this.handleNoteOff(noteName, nowTime, noteNumber);
         }
     }
 
+    handleNoteOn(noteName, nowTime) {
+        this.currentNotes.set(noteName, {startTime: nowTime});
+        this.lastNoteTime = nowTime;
+    }
+
+    handleNoteOff(noteName, nowTime, noteNumber) {
+        if (this.currentNotes.has(noteName)) {
+            const note = this.currentNotes.get(noteName);
+            note.noteName = noteName;
+            note.duration = this.getNoteOffset(nowTime) - this.getNoteOffset(note.startTime);
+            this.notes.push(note);
+            this.updateTextArea();
+        }
+    }
+    
+    getNoteNumber(noteName) {
+        const notes = ['C', 'C#', 'D', 'D#', 'E', 'F',
+                       'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        const octave = parseInt(noteName.slice(-1));
+        const noteIndex = notes.indexOf(noteName.slice(0, -1));
+        return noteIndex + (12 * octave) + 24;
+    }
+
+    quantizeNotes(notes) {
+        const secondsPerEighthNote = 60.0 / this.bpm / 2.0;
+        
+        const quantizedNotes = notes.map(note => {
+            const quantizedStart = secondsPerEighthNote * Math.round(note.startTime / secondsPerEighthNote);
+            const quantizedDuration = secondsPerEigthNote * Math.round(note.duration / secondsPerEighthNote);
+            return {
+                ...note,
+                startTime: quantizedStart,
+                duration: quantizedDuration 
+            };
+        });
+        return quantizedNotes.filter(note => note.duration > 0);
+    }
+
+    makeMonophonicNotes(notes) {
+        // Sort notes by start time
+        notes.sort((a, b) => a.startTime - b.startTime);
+
+        const monophonicNotes = [];
+        let activeNote = null;
+
+        for (const note of notes) {
+            if (activeNote === null) {
+                // No active note, so add this one
+                activeNote = { ...note }; 
+                monophonicNotes.push(activeNote);
+            } else if (note.startTime >= activeNote.startTime + activeNote.duration) {
+                // This note starts after the active note ends
+                activeNote = { ...note };
+                monophonicNotes.push(activeNote);
+            } else if (note.startTime + note.duration > activeNote.startTime + activeNote.duration) {
+                // This note overlaps and extends beyond the active note
+                activeNote.duration = note.startTime - activeNote.startTime; 
+                activeNote = { ...note };
+                monophonicNotes.push(activeNote);
+            } else {
+                // This note is completely overlapped by the active note, ignore it
+                continue; 
+            }
+        }
+
+        // Filter out any notes that might have been reduced to zero duration
+        return monophonicNotes.filter(note => note.duration > 0); 
+    }
+
+    // Treble clef: &
+    // C clef: ÿ
+    // Bass clef: ¯
     updateTextArea() {
         let output = "";
-        if (this.notes.length > 0) {
-            // Sort notes by start time
-            this.notes.sort((a, b) => a.startTime - b.startTime);
+        if (notes.length > 0) {
+            let notes = this.quantizeNotes(this.notes);
+            notes = this.makeMonophonicNotes(notes);
+            notes.sort((a, b) => a.startTime - b.startTime);
             let lastNoteTime = this.notes[0].startTime;
             for (const note of this.notes) {
                 const timeDelta = this.getNoteOffset(note.startTime) - this.getNoteOffset(lastNoteTime);
                 output += timeDelta + " " + note.duration + " " + note.noteName + " ";
-				lastNoteTime = note.startTime;
+				        lastNoteTime = note.startTime;
             }
         }
         this.textArea.innerHTML = output;
