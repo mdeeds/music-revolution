@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Recorder</title>
+    <link rel="stylesheet" href="style.css" optional>
+  </head>
+  <body>
+    <button id=init>init</button>
+    <div id="audio-recorder-container"></div>
+    
+    <script src="recorder.js"></script>
+    <script>
+      const initButton = document.getElementById('init');
+      initButton.addEventListener('click', () => {
+          document.innerHTML ='';
+          initAudio();
+      });
+    </script>
+  </body>
+</html>

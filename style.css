@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'MusiQwik';
+    src: url('resources/Musiqwik.ttf') format('truetype'); 
+}
+
+@font-face {
+    font-family: 'KleeOne-Regular';
+    src: url('resources/KleeOne-Regular.ttf') format('truetype');
+}
+
 body {
   font-family: 'Arial', sans-serif; 
   background-color: #222831; /* Dark green background */
@@ -9,6 +19,101 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  &::before {
+      background-image: url('resources/tex.jpeg');
+      filter: brightness(10%);
+      content: ""; /* Empty content */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vw; /* Image is square */
+      /* background-size: cover; */
+      z-index: -1000;
+      background-repeat: repeat  /* Doesn't work */
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.studio {
+    outline: 0.4vw solid #9ab;
+    border-radius: 0.4vw;
+    padding: 1vw;
+    margin: 1vw;    
+    height: 8vw;
+    width: 8vw;
+    background-image: url('resources/Studio.jpeg');
+    background-size: cover;
+    
+    display: flex; /* Enable flexbox layout */
+    flex-direction: column; /* Stack divs vertically */
+    position: relative; /* Needed for positioning "rec" div */
+}
+
+.rec {
+  /* Styles for the "rec" div */
+  position: absolute; /* Position on top of the studio div */
+  bottom: 0;
+  left: 0; /* Align to left */
+  width: 100%; /* Span the entire width */
+  height: 33.33%; /* Take up the top third */
+  background-color: #8004; /* Semi-transparent background */
+  color: white; /* Text color */
+  
+  text-align: center; /* Center the text */
+  font-weight: bold; /* Bold text */
+  font-size: 1.2vw; /* Adjust font size as needed */
+}
+
+.avatar {
+    width: 2vw;
+    height: 2vw;
+    border-radius: 2vw;
+    background-color: #fff8;
+    font-size: 1vw;
+    padding: 1vw;
+    text-align: center;
+}
+
+.inner-studio {
+  position: absolute; /* Position on top of the studio div */
+  top: 0;
+  left: 0; /* Align to left */
+  width: 100%; /* Span the entire width */
+  height: 66.67%; /* Take up the top third */
+  background-color: #0804; /* Semi-transparent background */
+  color: white; /* Text color */
+  
+  text-align: center; /* Center the text */
+  font-weight: bold; /* Bold text */
+  font-size: 1.2vw; /* Adjust font size as needed */
+}
+
+.notation {
+    font-family: 'MusiQwik', sans-serif;
+    font-size: 3.5vw;
+    background: #ffe;
+    color: black;
+    /* text-shadow: 0 0 1vmin grey; */
+}
+
+.chords {
+    font-family: 'KleeOne-Regular', sans-serif;
+    font-size: 3vw;
+    background: #ffe;
+    color: black;
+    /* text-shadow: 0 0 1vmin grey; */
+}
+
+.lyrics {
+    font-family: 'KleeOne-Regular', sans-serif;
+    font-size: 2.5vw;
+    background: #ffe;
+    color: #006;
+    /* text-shadow: 0 0 1vmin grey; */
 }
 
 h1 {
@@ -90,4 +195,55 @@ img {
     max-width: 50px;
     height: 50px;
     margin-left: 5px;
+}
+
+.section {
+    width: 90vw;
+    outline: 0.6vw solid #9ab;
+    border-radius: 1vw;
+    padding: 1vw;
+    margin: 1.3vw;
+}
+
+#studios {
+    display: flex;
+}
+
+#settings {
+}
+
+#huddle {
+}
+
+#score {
+}
+
+#pages {
+    background-color: #99b;
+    padding: 1vw;
+    margin: 1vw;
+}
+#addPage {
+}
+
+.line {
+    background-color: #fff;
+    padding: 0.2vw;
+    padding: 0.5vw;
+    margin: 0.1vw;
+}
+
+.page {
+    background-color: #fed;
+    padding: 1vw;
+    margin: 1vw;
+    box-shadow: 0px 0px 0.5vw 0.1vw #000;
+}
+
+
+.selected {
+    z-index: 100;
+    box-shadow: 0px 0px 0.1vw 0.1vw #33f;
+    background-color: #eef;
+    position: relative;
 }

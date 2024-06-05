@@ -57,6 +57,123 @@ class Metronome {
     }
 }
 
+class KeySignature {
+    constructor(numSharps = 0) {
+        this.numSharps = numSharps;
+        this.stafMap = this.getStafMap();
+    }
+
+    getStafMap() {
+        const mapOfMaps = [
+            [], // 5 flats
+            [], // 4 flats
+            [], // 3 flats
+            [], // 2 flats
+            [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 6, 6.5], // 1 flat
+            [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6], // E.g. C major
+            [0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 4.5, 5, 5.5, 6], // 1 sharp
+        ];
+        return mapOfMaps(this.numSharps + 5);
+    }
+    
+    getStafLineForMIDINote(noteNumber) {
+        const linesFromC = this.stafMap[noteNumber % 12];
+        const octavesFromC = Math.floor((noteNumber - 60) / 12);
+        if (this.numSharps < 0) {
+            return Math.ceil(linesFromC) + 7 * octavesFromC;
+        } else {
+            return Math.floor(linesFromC) + 7 * octavesFromC;
+        }
+    }
+}
+
+class Clef {
+    constructor(notes) {
+        let minNote = 255;
+        let maxNote = 0;
+        for (const n of notes) {
+            minNote = Math.min(n.noteNumber, minNote);
+            maxNote = Math.max(n.noteNumber, maxNote);
+        }
+        midNote = (minNote + maxNote) / 2;
+        if (midNote >= 60) {
+            this.clefSymbol = '&';
+            this.clefName = 'treble';
+        } else {
+            this.clefSymbol = '¯';
+            this.clefName = 'bass';
+        }
+        // TODO, consider the tenor clef: ÿ 
+
+        this.keySignature = new KeySignature();
+    }
+
+    getStafLineForMIDINote(noteNumber) {
+        const offsetFromMiddleC = this.keySignature.getStafLineForMIDINote(noteNumber);
+        
+    }
+}
+
+class NoteFormatter {
+    // Note: assumes 4/4 time.
+    constructor() {
+        // MusiQwik font. Arrows are middle C for treble and bass clef.
+        // https://www.fontspace.com/musiqwik-font-f3722
+        //                v           v
+        eigthNotes =   '@ABCDEFGHIJKLMN';
+        quarterNotes = 'PQRSTUVWXYZ[\\]^';
+        halfNotes =    '`abcdefghijklmn';
+        wholeNotes =   'pqrstuvwxyz{|}~';
+        sixteenthRest = '8';
+        eighthRest = '7';
+        quarterRest = ':';
+        halfRest = ';';
+        fullRest = '<';
+    }
+
+    // Notes are objects {noteName, noteNumber, startTime: seconds, duration:seconds}
+    format(notes, secondsPerBeat) {
+        const clef = new Clef(notes);
+        // 0 = common time.
+        result = [clef.clefSymbol, '=0'];
+
+        let notedTime = 0;
+        let elapsedTime = 0;
+        let beatsInBar = 0;
+        for (const note of notes) {
+            // TODO: Handle rests by advancing time appropriately to note.startTime
+
+            // Write the note
+            const numBeats = note.duration / secondsPerBeat;
+            let closestBeats = Math.pow(2, Math,round(Math.log2(numBeats)));
+            closestBeats = Math.min(4.0, Math.max(closestBeats, 0.5));
+            const index = clef.getStafLineForMIDINote(note.noteNumber) + 2;
+            if (index < 0 || index >= this.eighthNotes.length) {
+                // Note is out of range, just put a dot on the staf.
+                result.push('·');
+            } else {
+                switch (closestBeats) {
+                case 0.5: result.push(this.eighthNotes[index]); break;
+                case 1.0: result.push(this.quarterNotes[index]); break;
+                case 2.0: result.push(this.halfNotes[index]); break;
+                case 4.0: result.push(this.wholeNotes[index]); break;
+                default: console.error('Unreachable.'); break;
+                }
+            }
+            notedTime += secondsPerBeat * closestBeats;
+            elapsedTime += note.duration;
+            // Handle bar lines.  Note: for now we don't handle the case where a note
+            // is held over the bar line.  We probably want to truncate the note in that case.
+            beatsInBar += closestBeats;
+            if (beatsInBar >= 4) {
+                result.push('!');
+                beatsInBar -= 4;
+            }
+        }
+        return result.join('');
+    }
+}
+
 class MidiLogger {
     constructor(textContainer, autioContext, bpm = 120) {
         this.bpm = bpm;
@@ -136,14 +253,14 @@ class MidiLogger {
 		    }
         
         if (eventType == 0x90 && data[2] > 0) { // Note On
-            this.handleNoteOn(noteName, nowTime);
+            this.handleNoteOn(noteName, nowTime, noteNumber);
         } else if (eventType == 0x80 || eventType == 0x90) { // Note Off
             this.handleNoteOff(noteName, nowTime, noteNumber);
         }
     }
 
-    handleNoteOn(noteName, nowTime) {
-        this.currentNotes.set(noteName, {startTime: nowTime});
+    handleNoteOn(noteName, nowTime, noteNumber) {
+        this.currentNotes.set(noteName, noteNumber, {startTime: nowTime});
         this.lastNoteTime = nowTime;
     }
 
@@ -151,6 +268,7 @@ class MidiLogger {
         if (this.currentNotes.has(noteName)) {
             const note = this.currentNotes.get(noteName);
             note.noteName = noteName;
+            note.noteNumber = noteNumber;
             note.duration = this.getNoteOffset(nowTime) - this.getNoteOffset(note.startTime);
             this.notes.push(note);
             this.updateTextArea();
