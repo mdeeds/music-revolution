@@ -117,7 +117,8 @@ class WorkletRecorder {
 
     handleDragStart(canvasWrapper, waveformData, event) {
         event.dataTransfer.setData('text/plain', 'Audio Data');
-        event.dataTransfer.setData('audio/pcm;rate=48000;encoding=float;bits=32', waveformData.buffer);
+        event.dataTransfer.setData(
+            `audio/pcm;rate=${this.source.context.sampleRate};encoding=float;bits=32`, waveformData.buffer);
         canvasWrapper.style.cursor = "grabbing";
     }
 
@@ -169,7 +170,7 @@ class WorkletRecorder {
         } else {
             console.warn(`File ${file.name} is not an audio file.`);
         }
-    }    
+    }
 }
 
 async function initAudio() {
