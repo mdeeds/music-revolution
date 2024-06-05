@@ -24,6 +24,13 @@ class WorkletRecorder {
         document.body.appendChild(this.button);
         this.isRecording = false;
         this.startRecording().then((worklet) => { this.worklet = worklet; });
+        this.waveformCanvases = [];
+        this.dropTarget = document.createElement('div');
+        this.dropTarget.id = 'drop-target';
+        this.dropTarget.innerText = "Drop Audio Here";
+        document.body.appendChild(this.dropTarget);
+        this.dropTarget.addEventListener('dragover', this.handleDragOver.bind(this));
+        this.dropTarget.addEventListener('drop', this.handleDrop.bind(this));
     }
 
     async startRecording() {
@@ -72,6 +79,9 @@ class WorkletRecorder {
     }
 
     handleNewWaveform(waveformData) {
+        const canvasWrapper = document.createElement('div');
+        canvasWrapper.classList.add('canvas-wrapper');
+        canvasWrapper.draggable = true;
         const canvas = document.createElement('canvas');
         const recordingLength = waveformData.length / this.source.context.sampleRate;
         canvas.width = Math.round(10 * recordingLength);
@@ -95,13 +105,71 @@ class WorkletRecorder {
                 maxY = -Infinity;
             }
             const y = canvas.height / 2 - (canvas.height / 3) * waveformData[i];
-            // const y = canvas.height / 2 - (canvas.height / 3) * Math.sin(i * 0.00001);
             minY = Math.min(y, minY);
             maxY = Math.max(y, maxY);
         }
-        document.body.appendChild(canvas);
-        // canvas.addEventListener('click', this.handlePlayback.bind(this));
+        canvasWrapper.appendChild(canvas);
+        document.body.appendChild(canvasWrapper);
+
+        canvasWrapper.addEventListener('dragstart', this.handleDragStart.bind(this, canvasWrapper, waveformData));
+        this.waveformCanvases.push(canvasWrapper);
     }
+
+    handleDragStart(canvasWrapper, waveformData, event) {
+        event.dataTransfer.setData('text/plain', 'Audio Data');
+        event.dataTransfer.setData('audio/pcm;rate=48000;encoding=float;bits=32', waveformData.buffer);
+        canvasWrapper.style.cursor = "grabbing";
+    }
+
+    handleDragOver(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "copy"; 
+        this.dropTarget.style.backgroundColor = "lightblue"; 
+    }
+
+    handleDrop(event) {
+        event.preventDefault();
+        this.dropTarget.style.backgroundColor = "darkgrey"; 
+        const mimeTypes = [];
+        for (const key of event.dataTransfer.types) {
+            mimeTypes.push(key);
+            const dataValue = event.dataTransfer.getData(key);
+            console.log(`MIME Type: ${key}, Data: ${dataValue}`);
+            if (key === 'Files') {
+                // Handle dropped files
+                const files = event.dataTransfer.files;
+                for (const file of files) {
+                    console.log(`File Name: ${file.name}, MIME Type: ${file.type}, Size: ${file.size}`);
+                    this.handleNewAudioFile(file);
+                }
+            }
+        }
+        this.dropTarget.innerText = "MIME Types: " + mimeTypes.join(", ");
+    }
+
+    handleNewAudioFile(file) {
+        const audioContext = this.source.context;
+        if (!audioContext) { console.error('No audio context.'); }
+        
+        if (file.type.startsWith('audio/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                audioContext.decodeAudioData(e.target.result, (audioBuffer) => {
+                    // Success decoding audio data
+                    const bufferData = audioBuffer.getChannelData(0); // Assuming mono audio
+                    
+                    // Create the drag-and-drop canvas element
+                    this.handleNewWaveform(bufferData);
+                }, (error) => {
+                    // Error decoding audio data
+                    console.error('Error decoding audio data:', error);
+                });
+            };
+            reader.readAsArrayBuffer(file); // Read the file as an ArrayBuffer
+        } else {
+            console.warn(`File ${file.name} is not an audio file.`);
+        }
+    }    
 }
 
 async function initAudio() {
