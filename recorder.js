@@ -122,23 +122,23 @@ class WorkletRecorder {
         playButton.textContent = 'Play';
 
         let audioBufferSourceNode = null;
-        
-        playButton.addEventListener('click', () => {
-            if (!!audioBufferSourceNode) {
-                audioBufferSourceNode.stop();
-                audioBufferSourceNode.disconnect(this.source.context.destination);
-            }
-            
-        // Create and store the audio buffer source node
         const audioBuffer = this.source.context.createBuffer(
             1, // Number of channels
             waveformData.length, // Length of the buffer
             this.source.context.sampleRate // Sample rate
         );
         audioBuffer.getChannelData(0).set(waveformData); 
-        audioBufferSourceNode = this.source.context.createBufferSource();
-        audioBufferSourceNode.buffer = audioBuffer;
-        audioBufferSourceNode.connect(this.source.context.destination);
+        
+        playButton.addEventListener('click', () => {
+            if (!!audioBufferSourceNode) {
+                audioBufferSourceNode.stop();
+                audioBufferSourceNode.disconnect();
+            }
+            
+            // Create and store the audio buffer source node
+            audioBufferSourceNode = this.source.context.createBufferSource();
+            audioBufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.connect(this.source.context.destination);
             audioBufferSourceNode.start();
         });
 
