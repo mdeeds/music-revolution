@@ -109,10 +109,40 @@ class WorkletRecorder {
             maxY = Math.max(y, maxY);
         }
         canvasWrapper.appendChild(canvas);
+        canvasWrapper.appendChild(this.createPlayButton(waveformData)); 
         document.body.appendChild(canvasWrapper);
 
-        canvasWrapper.addEventListener('dragstart', this.handleDragStart.bind(this, canvasWrapper, waveformData));
+        canvasWrapper.addEventListener(
+            'dragstart', this.handleDragStart.bind(this, canvasWrapper, waveformData));
         this.waveformCanvases.push(canvasWrapper);
+    }
+
+    createPlayButton(waveformData) {
+        const playButton = document.createElement('button');
+        playButton.textContent = 'Play';
+
+        let audioBufferSourceNode = null;
+        
+        playButton.addEventListener('click', () => {
+            if (!!audioBufferSourceNode) {
+                audioBufferSourceNode.stop();
+                audioBufferSourceNode.disconnect(this.source.context.destination);
+            }
+            
+        // Create and store the audio buffer source node
+        const audioBuffer = this.source.context.createBuffer(
+            1, // Number of channels
+            waveformData.length, // Length of the buffer
+            this.source.context.sampleRate // Sample rate
+        );
+        audioBuffer.getChannelData(0).set(waveformData); 
+        audioBufferSourceNode = this.source.context.createBufferSource();
+        audioBufferSourceNode.buffer = audioBuffer;
+        audioBufferSourceNode.connect(this.source.context.destination);
+            audioBufferSourceNode.start();
+        });
+
+        return playButton;
     }
 
     handleDragStart(canvasWrapper, waveformData, event) {
