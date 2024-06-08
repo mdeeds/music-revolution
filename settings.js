@@ -62,6 +62,25 @@ class Settings {
         return this.settings.get(key) || "";
     }
 
+    getOr(key, defaultValue) {
+        const result = this.settings.get(key);
+        if (result) {
+            return result;
+        } else {
+            this.set(key, defaultValue);
+            return defaultValue;
+        }
+    }
+
+    numberGetOr(key, defaultValue) {
+        const result = this.getOr(key, defaultValue);
+        if (typeof(result) === 'number') {
+            return result;
+        }  else {
+            return parseInt(result);
+        }
+    }
+
     set(key, value) {
         this.settings.set(key, value);
         localStorage.setItem(key, value);

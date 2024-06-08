@@ -16,19 +16,21 @@ async function getAudioSourceNode() {
 }
 
 class WorkletRecorder {
-    constructor(source) {
+    constructor(source, controlsDiv, outputDiv) {
         this.source = source;
+        this.controlsDiv = controlsDiv;
+        this.outputDiv = outputDiv;
         this.button = document.createElement('button');
         this.button.innerText = 'record';
         this.button.addEventListener('click', () => { this.handleClick(); });
-        document.body.appendChild(this.button);
+        controlsDiv.appendChild(this.button);
         this.isRecording = false;
         this.startRecording().then((worklet) => { this.worklet = worklet; });
         this.waveformCanvases = [];
         this.dropTarget = document.createElement('div');
         this.dropTarget.id = 'drop-target';
         this.dropTarget.innerText = "Drop Audio Here";
-        document.body.appendChild(this.dropTarget);
+        controlsDiv.appendChild(this.dropTarget);
         this.dropTarget.addEventListener('dragover', this.handleDragOver.bind(this));
         this.dropTarget.addEventListener('drop', this.handleDrop.bind(this));
     }
@@ -110,7 +112,7 @@ class WorkletRecorder {
         }
         canvasWrapper.appendChild(canvas);
         canvasWrapper.appendChild(this.createPlayButton(waveformData)); 
-        document.body.appendChild(canvasWrapper);
+        this.outputDiv.appendChild(canvasWrapper);
 
         canvasWrapper.addEventListener(
             'dragstart', this.handleDragStart.bind(this, canvasWrapper, waveformData));
@@ -205,7 +207,14 @@ class WorkletRecorder {
 
 async function initAudio() {
 	  document.body.innerHTML = "";
+    const controlsDiv = document.createElement('div');
+    controlsDiv.id = 'controls-div';
+    document.body.appendChild(controlsDiv);
+
+    const outputDiv = document.createElement('div');
+    outputDiv.id = 'output-div';
+    document.body.appendChild(outputDiv);
     const source = await getAudioSourceNode();
-    const recorder = new WorkletRecorder(source);
+    const recorder = new WorkletRecorder(source, controlsDiv, outputDiv);
 }
  

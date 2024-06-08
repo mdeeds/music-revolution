@@ -8,14 +8,16 @@
   </head>
   <body>
     <button id=init>init</button>
-    <div id="audio-recorder-container"></div>
     
     <script src="recorder.js"></script>
+    <script src="settings.js"></script>
+    <script src="staff-notation.js"></script>
+    <script src="app.js"></script>
     <script>
       const initButton = document.getElementById('init');
       initButton.addEventListener('click', () => {
           document.innerHTML ='';
-          initAudio();
+          init();
       });
     </script>
   </body>

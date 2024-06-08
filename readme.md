@@ -38,8 +38,10 @@ and allow audio and MIDI input and output devices to be selected.
 
 By default MIDI will be recorded from all channels on all input MIDI
 devices.  This is represented by checked boxes next to the names of
-all discovered MIDI inputs.
-
+all discovered MIDI inputs.  The primary purpose of MIDI input is to
+create musical staff notation.  MIDI playback is not supported in the
+early milestones.
+  
 Audio input is from a single source.  Initially this source is the
 default audio input. All available audio inputs are enumerated and
 listed in the configuration area, and input for music and voice may be
@@ -215,6 +217,17 @@ MIDI: Notes are recorded, quantized, reduced to monophonic, and
 displayed in limited staff notation. Bass or treble clef only, no combined clefs.
 
 Chords: Not supported.
+
+** Beta **
+
+MIDI: Midi can be played from the app. It always sends on MIDI channel
+0.  This allows the application to be used as a MIDI sequencer.
+
+  
+** MVP **
+
+MIDI suports multiple MIDI channels.  This allows the software to
+control multiple external synthesizers simultaneously.
 
 ### Arrangement
 
