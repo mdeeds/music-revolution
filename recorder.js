@@ -10,7 +10,7 @@ async function getAudioSourceNode() {
             },
         },
     });
-    console.log(`Strem: ${stream.id}`);
+    console.log(`Stream: ${stream.id}`);
     const source = audioCtx.createMediaStreamSource(stream);
     return source;
 }
@@ -203,18 +203,5 @@ class WorkletRecorder {
             console.warn(`File ${file.name} is not an audio file.`);
         }
     }
-}
-
-async function initAudio() {
-	  document.body.innerHTML = "";
-    const controlsDiv = document.createElement('div');
-    controlsDiv.id = 'controls-div';
-    document.body.appendChild(controlsDiv);
-
-    const outputDiv = document.createElement('div');
-    outputDiv.id = 'output-div';
-    document.body.appendChild(outputDiv);
-    const source = await getAudioSourceNode();
-    const recorder = new WorkletRecorder(source, controlsDiv, outputDiv);
 }
  

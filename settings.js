@@ -16,7 +16,7 @@ class Settings {
 
     loadSettings() {
         const searchParams = new URLSearchParams(window.location.search);
-        for (const key of ['name', 'bpm', 'title']) {
+        for (const key of ['name', 'bpm', 'title', 'bars per line']) {
             const urlValue = searchParams.get(key);
             if (urlValue !== null) {
                 this.settings.set(key, urlValue);
@@ -26,6 +26,7 @@ class Settings {
                 this.settings.set(key, value);
             }
         }
+        this.numberGetOr('bars per line', 4);
     }
 
     _getIdForKey(key) {
