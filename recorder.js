@@ -33,6 +33,16 @@ class WorkletRecorder {
         controlsDiv.appendChild(this.dropTarget);
         this.dropTarget.addEventListener('dragover', this.handleDragOver.bind(this));
         this.dropTarget.addEventListener('drop', this.handleDrop.bind(this));
+
+        this.phrases = [];
+        const playButton = document.createElement('button');
+        playButton.innerText = 'play';
+        playButton.addEventListener('click', () => {
+            for (const phrase of this.phrases) {
+                phrase.play();
+            }
+        });
+        controlsDiv.appendChild(playButton);
     }
 
     async startRecording() {
@@ -111,40 +121,12 @@ class WorkletRecorder {
             maxY = Math.max(y, maxY);
         }
         canvasWrapper.appendChild(canvas);
-        canvasWrapper.appendChild(this.createPlayButton(waveformData)); 
+        const audioPhrase = new AudioPhrase(this.source.context, waveformData, canvasWrapper);
+        this.phrases.push(audioPhrase);
         this.outputDiv.appendChild(canvasWrapper);
-
         canvasWrapper.addEventListener(
             'dragstart', this.handleDragStart.bind(this, canvasWrapper, waveformData));
         this.waveformCanvases.push(canvasWrapper);
-    }
-
-    createPlayButton(waveformData) {
-        const playButton = document.createElement('button');
-        playButton.textContent = 'Play';
-
-        let audioBufferSourceNode = null;
-        const audioBuffer = this.source.context.createBuffer(
-            1, // Number of channels
-            waveformData.length, // Length of the buffer
-            this.source.context.sampleRate // Sample rate
-        );
-        audioBuffer.getChannelData(0).set(waveformData); 
-        
-        playButton.addEventListener('click', () => {
-            if (!!audioBufferSourceNode) {
-                audioBufferSourceNode.stop();
-                audioBufferSourceNode.disconnect();
-            }
-            
-            // Create and store the audio buffer source node
-            audioBufferSourceNode = this.source.context.createBufferSource();
-            audioBufferSourceNode.buffer = audioBuffer;
-            audioBufferSourceNode.connect(this.source.context.destination);
-            audioBufferSourceNode.start();
-        });
-
-        return playButton;
     }
 
     handleDragStart(canvasWrapper, waveformData, event) {

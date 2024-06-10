@@ -1,5 +1,13 @@
 # Zatt's Musical Exchange
 
+Zatt's Musical Exchange allows you to record and arrange music like a
+DAW and collaborate in real time like a Google Doc, and it reads like
+a lead sheet. Our core design principal is simplicity. This is
+intended to be a modern composition book and tape recorder for
+musicians.  We avoid menus and deep features in favor of clearly
+displaying all of the most meaningful information and not hiding
+settings and controls while keeping the user interface simple.
+  
 ## Overview
 
 This document is a design specification for a collaborative music
@@ -80,7 +88,7 @@ in the huddle room are inside the box.
 Studios work like the huddle room, but the first musician to click on
 the microphone in that room can record there as well.  The others in
 the room will here the tracks that the recording musician plays and
-what they are recording.  Recording creates new [Musical Lines] which
+what they are recording.  Recording creates new [Musical Phrases] which
 are added to the [Work Area].
 
 When the recording musician leaves the room, the microphone is free
@@ -88,28 +96,29 @@ for someone else to use.
 
 **Prototype**
 
-Lines are created in-order and cannot be rearanged.  They can be
-muted, but there is no sequencing.  All lines play simultaneously.
+Phrases are created in-order and cannot be rearanged.  They can be
+muted, but there is no sequencing.  All phrases play simultaneously.
 
-The lines created by other musicians can also be muted or played.
-Muting or playing these lines does not cause you to enter the [Other's Studios].
+The phrases created by other musicians can also be muted or played.
+Muting or playing these phrases does not cause you to move between
+rooms.
 
 **Beta**
 
-Lines can be sequenced into a song structure.  They may play or not
-play at different parts of the song.  Playback can be started or
-stopped at any point.
+Phrases can be sequenced into sections which together complete a song.
+They may play or not play at different parts of the song.  Playback
+can be started or stopped at any point.
 
 Song structure is shared between musicians.
 
 
 **MVP**
 
-Lines can start before the first bar. (i.e. pickup notes or
+Phrases can start before the first bar. (i.e. pickup notes or
 anacrusis.)  They also do not need to extend the full duration of the
 line.
 
-Latency for an individual line can be adjusted after it has been
+Latency for an individual phrase can be adjusted after it has been
 recorded.
 
 #### The Dark Corner
@@ -120,13 +129,13 @@ play tracks, but no one can listen in while they are playing.
   
 #### Work Area
 
-The Work Area displays a shared score, containing all musical lines
-created by all musicians.  Musical lines are wide rectangular boxes
+The Work Area displays a shared score, containing all musical phrases
+created by all musicians.  Musical phrases are wide rectangular boxes
 that stretch the width of the work area.  The content of the box
 varies depending on what type of element it is. See [Musical
-Lines].
+Phrases].
 
-Typically a musical line is four bars, but this can be changed in the [Settings].
+Typically a musical phrase is four bars, but this can be changed in the [Settings].
 
 **Prototype**
 
@@ -141,9 +150,6 @@ settings for the musician that is playing and recording.
 **MVP**
 
 Latency can be adjusted by the listener as well as the mix of recording and playback.
-
-
-    
 
 ### Project Properties
 
@@ -189,8 +195,23 @@ downloaded as WAV files, and they can also be drag-and-dropped
 directly into a DAW like Ableton.
 
   
-### Musical Lines
+### Musical Phrases
 
+A hierarchical structure defines the song.
+
+**Phrases** are a single piece of audio or text lasting the line
+  length of the project.  The default line length is four bars.
+
+**Lines** are a collection of Phrases which play simultaneously.
+
+A **Part** is a single source (e.g. an instrument).  It is the
+concatenation of Phrases across lines.  Each part can only have one
+Phrase per Line.
+
+A **Section** is a sequence of lines.  E.g. a chorus or verse.
+
+A **Song** is a collection of sections.
+  
 Every line is the same length in a project.  There are four types of lines:
 
   * Audio
@@ -211,8 +232,8 @@ MIDI example: [ Staff notation with a treble clef and notes making a simple melo
 Chords example: Eb | Gm | Cm | Ab
 
 
-Lines are grouped into sets which occur simultaneously.  The
-sequencing of these line groups is determined by their order in the
+A Line is a group of phrases which play simultaneously.  The
+sequencing of these lines is determined by their order in the
 work area.
 
 Example:
@@ -256,37 +277,37 @@ MIDI suports multiple MIDI channels.  This allows the software to
 control multiple external synthesizers simultaneously.
 
 
-#### Audio Lines
+#### Audio Phrases
 
-Audio lines are the only ones which can be played back.  The other
-types of lines guide the musicians through the song.
+Audio phrases are the only ones which can be played back.  The other
+types of phrases guide the musicians through the song.
 
 **Prototype**
 
-Each audio line can be muted individually.  A single playback button
-will play all lines in the current group.  Audio is played back in a
+Each audio phrase can be muted individually.  A single playback button
+will play the currently selected line.  Audio is played back in a
 single audio channel
 
 ** Beta **
 
-A simple mixer is associated with each line.  This allows for
+A simple mixer is associated with each part.  This allows for
 adjusting levels and panning.
 
 ** MVP **
   
-A simple filter for each line provides an optional low pass and high
+A simple filter for each part provides an optional low pass and high
 pass filter (applied in series).  The cutoff can be adjusted and a
 slope of either 12 or 24 dB per octave can be selected.
   
 
 ### Arrangement
 
-Musical lines are represented as rectangles that take up minimal
+Musical phrases are represented as rectangles that take up minimal
 vertical space and horizontal space represents time.
 
 **Prototype**
 
-Lines are added sequentially to the musician's workspace.
+Phrases are added sequentially to the musician's workspace.
 
 **Beta**
 
