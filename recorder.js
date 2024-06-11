@@ -22,6 +22,8 @@ class WorkletRecorder {
         this.outputDiv = outputDiv;
         this.button = document.createElement('button');
         this.button.innerText = 'record';
+        this.button.disabled = true;
+        this.button.classList.add('disabled-button');
         this.button.addEventListener('click', () => { this.handleClick(); });
         controlsDiv.appendChild(this.button);
         this.isRecording = false;
@@ -44,6 +46,11 @@ class WorkletRecorder {
         });
         controlsDiv.appendChild(playButton);
     }
+
+    // TODO: The record button should initially be in a disabled
+    // state.  We need methods to enable and disable recording. These
+    // are called by the rooms.  I.e. when sitting at a microphone,
+    // recording is enabled, when sitting in a seat, it is disabled.
 
     async startRecording() {
 	      return new Promise(async (resolve, reject) => {
@@ -75,6 +82,7 @@ class WorkletRecorder {
     }
 
     handleClick() {
+        if (this.button.disabled) return;
         if (this.isRecording) {
             const message = {
                 command: 'getData', startTime:
@@ -184,6 +192,20 @@ class WorkletRecorder {
         } else {
             console.warn(`File ${file.name} is not an audio file.`);
         }
+    }
+
+    enableRecording() {
+        this.button.disabled = false;
+        this.button.classList.remove('disabled-button');
+        this.button.innerText = 'record';
+    }
+
+    disableRecording() {
+        if (this.isRecording) {
+            this.handleClick();
+        }
+        this.button.disabled = true;
+        this.button.classList.add('disabled-button');
     }
 }
  

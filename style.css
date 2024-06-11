@@ -10,8 +10,8 @@
 
 body {
   font-family: 'Arial', sans-serif; 
-  background-color: #222831; /* Dark green background */
-  color: #fff; /* White text for contrast */
+  background-color: #f5f5dc; 
+  color: #333;
   margin: 0;
   padding: 0;
   display: flex;
@@ -19,38 +19,29 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  &::before {
-      background-image: url('resources/tex.jpeg');
-      filter: brightness(10%);
-      content: ""; /* Empty content */
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vw; /* Image is square */
-      /* background-size: cover; */
-      z-index: -1000;
-      background-repeat: repeat  /* Doesn't work */
-  }
 }
 
 .hidden {
   display: none;
 }
 
+.rooms {
+  display: flex;
+  flex-direction: row; /* Arrange studios horizontally */
+  flex-wrap: wrap; /* Allow studios to wrap to the next line if needed */
+  justify-content: space-around; /* Distribute studios evenly */
+  margin-bottom: 2rem; /* Add margin below the rooms container */
+}
+
 .studio {
     outline: 0.4vw solid #9ab;
     border-radius: 0.4vw;
     padding: 1vw;
-    margin: 1vw;    
-    height: 8vw;
-    width: 8vw;
-    background-image: url('resources/Studio.jpeg');
-    background-size: cover;
-    
+    margin: 1vw;        
     display: flex; /* Enable flexbox layout */
     flex-direction: column; /* Stack divs vertically */
     position: relative; /* Needed for positioning "rec" div */
+    width: 12vw;
 }
 
 .rec {
@@ -98,6 +89,11 @@ body {
     background: #ffe;
     color: black;
     /* text-shadow: 0 0 1vmin grey; */
+    padding: 0.5vw;
+    margin: 0.1vw;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 0.1vw solid #9ab;
 }
 
 .chords {
@@ -106,6 +102,11 @@ body {
     background: #ffe;
     color: black;
     /* text-shadow: 0 0 1vmin grey; */
+    padding: 0.5vw;
+    margin: 0.1vw;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 0.1vw solid #9ab;
 }
 
 .lyrics {
@@ -114,6 +115,11 @@ body {
     background: #ffe;
     color: #006;
     /* text-shadow: 0 0 1vmin grey; */
+    padding: 0.5vw;
+    margin: 0.1vw;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 0.1vw solid #9ab;
 }
 
 h1 {
@@ -124,7 +130,7 @@ h1 {
 }
 
 h2 {
-  color: #fff; /* White */
+  color: #333; /* Dark Gray */
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
@@ -137,22 +143,28 @@ h2 {
 }
 
 button {
-  background-color: #FFD700; /* Yellow */
-  color: #222831; /* Dark Green */
-  border: none;
-  padding: 10px 20px;
+  background-color: #ce4444; 
+  color: #fff; /* White text for readability */
+  border: 1px solid #9ab; /* Add a subtle border */
+  padding: 8px 16px; /* Reduced padding for tighter text */
   font-size: 1rem;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.disabled-button {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 button:hover {
-  background-color: #FFC107; /* Lighter Yellow */
+  background-color: #f59e9e; 
 }
 
 .midi-log {
-  background-color: #904569; /* Purple, matching the brain section */
+  background-color: #F5F5DC; /* Light, almost beige */
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -167,7 +179,7 @@ button:hover {
 }
 
 .midi-player {
-  background-color: #904569; /* Same purple as log */
+  background-color: #F5F5DC; /* Same light beige as log */
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -183,12 +195,12 @@ button:hover {
   border: 1px solid #ddd; 
   padding: 10px;
   font-family: 'Courier New', monospace; 
-  color: #fff; /* White text for textarea */
-  background-color: #333; /* Dark gray background for textarea */
+  color: #333; /* Dark gray text for textarea */
+  background-color: #fff; /* White background for textarea */
 }
 
 .midi-log, .midi-player {
-  color: #FFD700; /* Yellow text for log and player areas */
+  color: #333; /* Dark gray text for log and player areas */
 }
 
 img {
@@ -219,9 +231,15 @@ img {
 }
 
 #pages {
-    background-color: #99b;
+    background-color: #f5f5dc;
     padding: 1vw;
     margin: 1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 0.2vw solid #9ab;
+    border-radius: 0.5vw;
 }
 #addPage {
 }
@@ -231,6 +249,9 @@ img {
     padding: 0.2vw;
     padding: 0.5vw;
     margin: 0.1vw;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 0.1vw solid #9ab;
 }
 
 .page {
@@ -238,6 +259,9 @@ img {
     padding: 1vw;
     margin: 1vw;
     box-shadow: 0px 0px 0.5vw 0.1vw #000;
+    width: 10vw;
+    border: 0.2vw solid #9ab;
+    border-radius: 0.5vw;
 }
 
 
