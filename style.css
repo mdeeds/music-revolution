@@ -8,266 +8,260 @@
     src: url('resources/KleeOne-Regular.ttf') format('truetype');
 }
 
+
+/* Base styles */
+
 body {
-  font-family: 'Arial', sans-serif; 
-  background-color: #f5f5dc; 
-  color: #333;
   margin: 0;
   padding: 0;
+  font-family: sans-serif;
+  background-color: #f7f7f7; /* Very light grey background */
+  font-family: 'KleeOne-Regular'
+}
+
+.container {
   display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Left side - Music Composition Area */
+
+.music-area {
+  flex: 3; /* Takes up 3/4 of the screen width */
+  background-color: #fff; /* White background for music area */
+  padding: 2vw; /* Padding around the edges */
+  display: flex; /* Stack buttons and music composition content vertically */
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
 }
 
-.hidden {
-  display: none;
+.collaboration-panel {
+  flex: 1; /* Takes up 1/4 of the screen width */
+  background-color: #bbb; /* Light grey background for collaboration panel */
+  padding: 1vw; /* Padding around the edges */
+  display: flex; /* Rooms displayed horizontally */
+  flex-direction: column; /* Rooms stacked vertically */
 }
 
-.rooms {
+
+/* Record, Play, Mute Buttons */
+
+.controls {
+  display: flex; /* Buttons displayed horizontally */
+  justify-content: space-between; /* Buttons spaced evenly */
+  margin-bottom: 1vw; /* Spacing below buttons */
+}
+
+button.control {
+  background-color: #ddd; /* Light grey background for buttons */
+  border: none; /* Remove default button border */
+  padding: 2px 2px; /* Padding for button text */
+  border-radius: 4px; /* Rounded corners for buttons */
+  cursor: pointer; /* Indicate clickable elements */
+}
+
+button.disabled {
+    color: #999;
+    opacity: 0.5; /* Reduce opacity for disabled buttons */
+    cursor: not-allowed; /* Indicate element is not interactive */
+}
+
+.mute-button {
+  color: gray; /* Grey for mute button */
+}
+
+/* Staff Notation & Waveforms */
+
+.staff-and-waveforms {
   display: flex;
-  flex-direction: row; /* Arrange studios horizontally */
-  flex-wrap: wrap; /* Allow studios to wrap to the next line if needed */
-  justify-content: space-around; /* Distribute studios evenly */
-  margin-bottom: 2rem; /* Add margin below the rooms container */
+  justify-content: space-between; /* Staff and waveforms aligned horizontally */
+  margin-bottom: 1vw; /* Spacing below staff */
 }
 
-.studio {
-    outline: 0.4vw solid #9ab;
-    border-radius: 0.4vw;
-    padding: 1vw;
-    margin: 1vw;        
-    display: flex; /* Enable flexbox layout */
-    flex-direction: column; /* Stack divs vertically */
-    position: relative; /* Needed for positioning "rec" div */
-    width: 12vw;
+.staff {
+  /* Styles for your staff notation implementation here */
+  width: 100%; /* Staff takes full width of music area */
+  font-family: 'MusiQwik';
+  background: #fff;
+  font-size: 2em;
 }
 
-.rec {
-  /* Styles for the "rec" div */
-  position: absolute; /* Position on top of the studio div */
-  bottom: 0;
-  left: 0; /* Align to left */
-  width: 100%; /* Span the entire width */
-  height: 33.33%; /* Take up the top third */
-  background-color: #8004; /* Semi-transparent background */
-  color: white; /* Text color */
-  
-  text-align: center; /* Center the text */
-  font-weight: bold; /* Bold text */
-  font-size: 1.2vw; /* Adjust font size as needed */
+.waveforms {
+  width: 100%; /* Waveforms take full width of staff area */
+  height: 1vw; /* Thin waveform lines */
+  background-color: #add8e6; /* Light blue for waveforms */
+  background: #fff;
 }
 
-.avatar {
-    width: 2vw;
-    height: 2vw;
-    border-radius: 2vw;
-    background-color: #fff8;
-    font-size: 1vw;
-    padding: 1vw;
-    text-align: center;
-}
-
-.inner-studio {
-  position: absolute; /* Position on top of the studio div */
-  top: 0;
-  left: 0; /* Align to left */
-  width: 100%; /* Span the entire width */
-  height: 66.67%; /* Take up the top third */
-  background-color: #0804; /* Semi-transparent background */
-  color: white; /* Text color */
-  
-  text-align: center; /* Center the text */
-  font-weight: bold; /* Bold text */
-  font-size: 1.2vw; /* Adjust font size as needed */
-}
-
-.notation {
-    font-family: 'MusiQwik', sans-serif;
-    font-size: 3.5vw;
-    background: #ffe;
-    color: black;
-    /* text-shadow: 0 0 1vmin grey; */
-    padding: 0.5vw;
-    margin: 0.1vw;
-    display: flex;
-    flex-direction: column;
-    border-bottom: 0.1vw solid #9ab;
-}
+/* Chords & Lyrics */
 
 .chords {
-    font-family: 'KleeOne-Regular', sans-serif;
-    font-size: 3vw;
-    background: #ffe;
-    color: black;
-    /* text-shadow: 0 0 1vmin grey; */
-    padding: 0.5vw;
-    margin: 0.1vw;
-    display: flex;
-    flex-direction: column;
-    border-bottom: 0.1vw solid #9ab;
+  font-size: 0.8vw; /* Smaller font size for chords */
+  background: #fff;
+  display: flex;
+  justify-content: space-between; /* Align chords and lyrics horizontally */
+  margin-bottom: 1vw; /* Spacing below chords and lyrics */
 }
 
 .lyrics {
-    font-family: 'KleeOne-Regular', sans-serif;
-    font-size: 2.5vw;
-    background: #ffe;
-    color: #006;
-    /* text-shadow: 0 0 1vmin grey; */
-    padding: 0.5vw;
-    margin: 0.1vw;
-    display: flex;
-    flex-direction: column;
-    border-bottom: 0.1vw solid #9ab;
-}
-
-h1 {
-  color: #FFD700; /* Bright Yellow */
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-h2 {
-  color: #333; /* Dark Gray */
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.controls {
+  font-size: 1.4em; /* Slightly larger font for lyrics */
+  text-align: center; /* Center lyrics horizontally */
+  border-top: 1px solid #4ff; /* Light cyan top border */
+  border-bottom: 1px solid #4ff; /* Light cyan bottom border */
+  background: #fff;
   display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 2rem;
+  justify-content: space-between; /* Align chords and lyrics horizontally */
+  margin-bottom: 1vw; /* Spacing below chords and lyrics */
 }
 
-button {
-  background-color: #ce4444; 
-  color: #fff; /* White text for readability */
-  border: 1px solid #9ab; /* Add a subtle border */
-  padding: 8px 16px; /* Reduced padding for tighter text */
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+/* Line & Phrase (Nested elements within line) */
+
+.composition {
+    background: #ddd;
 }
 
-.disabled-button {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-button:hover {
-  background-color: #f59e9e; 
-}
-
-.midi-log {
-  background-color: #F5F5DC; /* Light, almost beige */
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  max-width: 600px;
-}
-
-.midi-log-line {
-  outline: 1px solid #ddd; 
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.midi-player {
-  background-color: #F5F5DC; /* Same light beige as log */
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  max-width: 600px; 
-  margin-top: 2rem;
-}
-
-.midi-player textarea {
-  width: calc(100% - 20px);
-  height: 200px;
-  resize: both;
-  border: 1px solid #ddd; 
-  padding: 10px;
-  font-family: 'Courier New', monospace; 
-  color: #333; /* Dark gray text for textarea */
-  background-color: #fff; /* White background for textarea */
-}
-
-.midi-log, .midi-player {
-  color: #333; /* Dark gray text for log and player areas */
-}
-
-img {
-    max-width: 50px;
-    height: 50px;
-    margin-left: 5px;
-}
-
-.section {
-    width: 90vw;
-    outline: 0.6vw solid #9ab;
-    border-radius: 1vw;
-    padding: 1vw;
-    margin: 1.3vw;
-}
-
-#studios {
-    display: flex;
-}
-
-#settings {
-}
-
-#huddle {
-}
-
-#score {
-}
-
-#pages {
-    background-color: #f5f5dc;
-    padding: 1vw;
-    margin: 1vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 0.2vw solid #9ab;
-    border-radius: 0.5vw;
-}
-#addPage {
+.music-area {
+    background: #ccc;
 }
 
 .line {
-    background-color: #fff;
-    padding: 0.2vw;
-    padding: 0.5vw;
-    margin: 0.1vw;
-    display: flex;
-    flex-direction: column;
-    border-bottom: 0.1vw solid #9ab;
+  display: flex; /* Phrases displayed horizontally within a line */
+  flex-direction: column; /* Phrases stacked vertically */
+  margin-bottom: 0.5vw; /* Spacing between lines */
+  height: 4vw; /* Defines a line as 4 bars of music */
+  border: 1px solid #ddd; /* Pencil-like border for lines */
+  background-color: #eee; /* White background for lines */
+  position: relative; /* Enable absolute positioning for child elements */
+  width: 80vw;
 }
 
-.page {
-    background-color: #fed;
-    padding: 1vw;
-    margin: 1vw;
-    box-shadow: 0px 0px 0.5vw 0.1vw #000;
-    width: 10vw;
-    border: 0.2vw solid #9ab;
-    border-radius: 0.5vw;
+.bar-line {
+  position: absolute; /* Absolutely positioned within the line */
+  left: 1vw;  /* Adjust for desired position within the measure */
+  top: 0; /* Start at the top of the line */
+  width: 1px; /* Thin line for the bar */
+  height: 100%; /* Span the entire height of the line */
+  background-color: #ddd; /* Pencil-like color for the line */
 }
 
-
-.selected {
-    z-index: 100;
-    box-shadow: 0px 0px 0.1vw 0.1vw #33f;
-    background-color: #eef;
-    position: relative;
+.phrase {
+  /* Styles for individual musical phrases here */
+  flex: 1; /* Phrases share available space within a line */
+  /* Removed border for phrase - it's now part of the line */
+  padding-bottom: 0.25vw; /* Padding below phrase content */
 }
+
+/* Section (Nested element within line) */
+
+.section {
+  margin-bottom: 1vw; /* Spacing between sections */
+}
+
+.section-label {
+  font-size: 0.8vw; /* Smaller font size for section labels */
+  font-weight: bold; /* Bold text for section labels */
+  margin-bottom: 0.5vw; /* Spacing below section label */
+  padding-left: 1vw; /* Indentation for section labels (visual hierarchy) */
+}
+
+/* Right side - Collaboration Panel */
+
+/* Collaboration Panel - Individual Collaborator */
+
+.collaborator {
+  display: flex;
+  align-items: center; /* Align collaborator info horizontally */
+  margin-bottom: 0.5vw; /* Spacing between collaborators */
+}
+
+.collaborator-avatar {
+  width: 1vw; /* Size of collaborator avatar (optional) */
+  height: 1vw; /* Size of collaborator avatar (optional) */
+  border-radius: 50%; /* Rounded avatar */
+  margin-right: 0.5vw; /* Spacing between avatar and name */
+}
+
+.collaborator-name {
+  font-size: 0.8vw; /* Font size for collaborator name */
+}
+
+.collaborator-status {
+  margin-left: 1vw; /* Spacing between name and status */
+}
+
+.online {
+  color: green; /* Green dot for online status */
+}
+
+/* Collaboration Panel Styles */
+
+/* Room Representation */
+
+.room {
+  margin-bottom: 1vw; /* Spacing between rooms */
+  background-color: #fff; /* White background for each room */
+  border-radius: 4px; /* Rounded corners for rooms */
+  padding: 0.5vw 1vw; /* Padding inside each room */
+  display: flex; /* Microphone spot, seats, and controls (optional) */
+  justify-content: space-between; /* Align elements within a room */
+  align-items: center; /* Vertically center elements within a room */
+}
+
+.room-name {
+  font-weight: bold; /* Bold text for room names */
+  font-size: 0.8em; /* Slightly smaller font size */
+  color: #0008;
+}
+
+/* Microphone Spot */
+
+.microphone-spot {
+  width: 1vw; /* Size of microphone spot icon */
+  height: 1vw; /* Size of microphone spot icon */
+  background-color: #ddd; /* Light grey for microphone spot */
+  border-radius: 50%; /* Rounded microphone spot */
+}
+
+/* Seat Styles */
+
+.seats {
+  display: flex; /* Seats displayed horizontally */
+}
+
+.seat {
+  width: 1vw; /* Size of each seat icon */
+  height: 1vw; /* Size of each seat icon */
+  margin-right: 0.25vw; /* Spacing between seats */
+  border-radius: 50%; /* Rounded seats */
+}
+
+.available-seat {
+  background-color: #ddd; /* Light grey for available seats */
+}
+
+.occupied-seat {
+  background-color: #777; /* Darker grey for occupied seats */
+}
+
+/* Collaboration Controls (Microphone Spot & Buttons - Optional for some rooms) */
+
+.collaboration-controls {
+  display: flex; /* Microphone spot and buttons displayed inline */
+}
+
+.collaboration-button {
+  background-color: #ddd; /* Light grey background for buttons */
+  border: none; /* Remove default button border */
+  padding: 0.25vw 0.5vw; /* Padding for button text */
+  border-radius: 4px; /* Rounded corners for buttons */
+  cursor: pointer; /* Indicate clickable elements */
+}
+
+.record-button {
+  color: red; /* Red for record button */
+}
+
+.play-button {
+  color: green; /* Green for play button */
+}
+

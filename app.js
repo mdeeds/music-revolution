@@ -12,25 +12,40 @@ function setUpSpeechToText(controlsDiv, speechLogger) {
 }
 
 async function init() {
-	  document.body.innerHTML = "";
-    const settingsDiv = document.createElement('div');
-    settingsDiv.id = 'settings-div';
-    document.body.appendChild(settingsDiv);
-
-    const roomsDiv = document.createElement('div');
-    document.body.appendChild(roomsDiv);
+	  document.body.innerHTML = `
+  <div id='settings-div'></div>
+  <div class="container">
+    <div class="music-area">
+      <div class="composition" id="composition">
+        <div id=header></div>
+        <div class="line" id="first-line"></div>
+      </div>
+    </div>
+    <div class="collaboration-panel" id="collaboration-panel">
+  </div>
+  </div>
+`;
     
+    const settingsDiv = document.getElementById('settings-div');
+    const settings = new Settings(settingsDiv);
+
+    const header = new LyricsPhrase(document.getElementById('header'));
+    header.setContent(`bpm = ${settings.get('bpm')}`); 
+
+    const roomsDiv = document.getElementById('collaboration-panel');
     const controlsDiv = document.createElement('div');
     controlsDiv.id = 'controls-div';
     document.body.appendChild(controlsDiv);
 
-    const outputDiv = document.createElement('div');
-    outputDiv.id = 'output-div';
-    document.body.appendChild(outputDiv);
+    const outputDiv = document.getElementById('first-line');
+
+    
+    new StaffPhrase(outputDiv);
+    new LyricsPhrase(outputDiv);
+
     const source = await getAudioSourceNode();
     const recorder = new WorkletRecorder(source, controlsDiv, outputDiv);
 
-    const settings = new Settings(settingsDiv);
     const midiLogger = new MidiLogger(outputDiv, source, settings.numberGetOr('bpm', 120));
     const speechLogger = new SpeechToText(outputDiv);
     setUpSpeechToText(controlsDiv, speechLogger);

@@ -5,10 +5,14 @@ class Room {
         this.participants = new Set();
         this.audioDataBuffers = {};
         this.roomDiv = document.createElement('div');
-        this.roomDiv.innerText = roomName;
-        this.roomDiv.classList.add('studio');
+        this.roomDiv.classList.add('room');
+        const roomNameDiv = document.createElement('div');
+        roomNameDiv.classList.add('room-name');
+        roomNameDiv.innerText = roomName;
+        this.roomDiv.appendChild(roomNameDiv);
         
         this.seatsDiv = document.createElement('div');
+        this.seatsDiv.classList.add('seats');
         this.seatsDiv.innerText = 'seats';
         this.roomDiv.appendChild(this.seatsDiv);
 

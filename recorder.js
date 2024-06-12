@@ -23,7 +23,8 @@ class WorkletRecorder {
         this.button = document.createElement('button');
         this.button.innerText = 'record';
         this.button.disabled = true;
-        this.button.classList.add('disabled-button');
+        this.button.classList.add('control');
+        this.button.classList.add('disabled');
         this.button.addEventListener('click', () => { this.handleClick(); });
         controlsDiv.appendChild(this.button);
         this.isRecording = false;
@@ -38,6 +39,7 @@ class WorkletRecorder {
 
         this.phrases = [];
         const playButton = document.createElement('button');
+        playButton.classList.add('control');
         playButton.innerText = 'play';
         playButton.addEventListener('click', () => {
             for (const phrase of this.phrases) {
@@ -100,7 +102,9 @@ class WorkletRecorder {
 
     handleNewWaveform(waveformData) {
         const canvasWrapper = document.createElement('div');
-        canvasWrapper.classList.add('canvas-wrapper');
+        canvasWrapper.classList.add('phrase');
+        canvasWrapper.classList.add('staff-and-waveforms');
+        canvasWrapper.classList.add('waveforms');
         canvasWrapper.draggable = true;
         const canvas = document.createElement('canvas');
         const recordingLength = waveformData.length / this.source.context.sampleRate;
@@ -196,7 +200,7 @@ class WorkletRecorder {
 
     enableRecording() {
         this.button.disabled = false;
-        this.button.classList.remove('disabled-button');
+        this.button.classList.remove('disabled');
         this.button.innerText = 'record';
     }
 
@@ -205,7 +209,7 @@ class WorkletRecorder {
             this.handleClick();
         }
         this.button.disabled = true;
-        this.button.classList.add('disabled-button');
+        this.button.classList.add('disabled');
     }
 }
  
