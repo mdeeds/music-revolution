@@ -105,7 +105,7 @@ button.disabled {
 
 .lyrics {
   font-size: 1.4em; /* Slightly larger font for lyrics */
-  text-align: center; /* Center lyrics horizontally */
+  text-align: left; 
   border-top: 1px solid #4ff; /* Light cyan top border */
   border-bottom: 1px solid #4ff; /* Light cyan bottom border */
   background: #fff;
