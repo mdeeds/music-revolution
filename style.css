@@ -83,7 +83,7 @@ button.disabled {
   width: 100%; /* Staff takes full width of music area */
   font-family: 'MusiQwik';
   background: #fff;
-  font-size: 2em;
+  font-size: 3.5em;
 }
 
 .waveforms {
@@ -197,50 +197,100 @@ button.disabled {
 
 /* Room Representation */
 
+/* Room Styles */
 .room {
+  display: flex; /* Microphone spot, seats, and controls (optional) */
+  flex-direction: column; /* Elements stacked vertically */
+  justify-content: flex-start; /* Align elements to the top */
+  align-items: center; /* Vertically center elements within a room */
+  width: 10vw; /* Adjust width as needed */
   margin-bottom: 1vw; /* Spacing between rooms */
   background-color: #fff; /* White background for each room */
   border-radius: 4px; /* Rounded corners for rooms */
   padding: 0.5vw 1vw; /* Padding inside each room */
-  display: flex; /* Microphone spot, seats, and controls (optional) */
-  justify-content: space-between; /* Align elements within a room */
-  align-items: center; /* Vertically center elements within a room */
+  border: 1px solid #ddd; /* Optional border */
 }
 
 .room-name {
   font-weight: bold; /* Bold text for room names */
   font-size: 0.8em; /* Slightly smaller font size */
+  width: 100%;
   color: #0008;
 }
 
-/* Microphone Spot */
+/* Seat Area */
+.seat-area {
+  display: flex; /* Seats displayed horizontally */
+  flex-direction: column; /* Seats stacked vertically */
+  width: 100%;
+}
 
-.microphone-spot {
-  width: 1vw; /* Size of microphone spot icon */
-  height: 1vw; /* Size of microphone spot icon */
-  background-color: #ddd; /* Light grey for microphone spot */
-  border-radius: 50%; /* Rounded microphone spot */
+/* Visitor Area */
+.visitor-area {
+  display: flex; /* Seats flow left to right */
+  justify-content: flex-start; /* Align to the left */
+  width: 100%;
+}
+
+/* Recording Area */
+.recording-area {
+  display: flex; /* rec, play, and micSeat displayed horizontally */
+  align-items: center; /* Vertically center elements */
+  width: 100%;
 }
 
 /* Seat Styles */
-
-.seats {
-  display: flex; /* Seats displayed horizontally */
-}
-
 .seat {
-  width: 1vw; /* Size of each seat icon */
-  height: 1vw; /* Size of each seat icon */
-  margin-right: 0.25vw; /* Spacing between seats */
-  border-radius: 50%; /* Rounded seats */
-}
-
-.available-seat {
+  width: 3vw; /* Size of each seat icon */
+  height: 1.5vw; /* Size of each seat icon */
+  margin: 0.25vw 0; /* Spacing between seats */
+  border-radius: 0.75vw; /* Rounded seats */
   background-color: #ddd; /* Light grey for available seats */
+  border: 1px solid #ddd; /* Optional border */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .occupied-seat {
   background-color: #777; /* Darker grey for occupied seats */
+}
+
+/* Microphone Seat */
+.micSeat {
+  width: 1.5vw; /* Size of each seat icon */
+  height: 1.5vw; /* Size of each seat icon */
+  margin: 0.25vw 0; /* Spacing between seats */
+  border-radius: 0.75vw; /* Rounded seats */
+  background-color: #ddd; /* Light grey for available seats */
+  border: 1px solid #ddd; /* Optional border */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Record, Play Buttons */
+.rec, .play {
+  width: 2vw; /* Size of each button */
+  height: 1.5vw; /* Size of each button */
+  border-radius: 0.75vw; /* Rounded buttons */
+  background-color: #ddd; /* Light grey for buttons */
+  border: 1px solid #ddd; /* Optional border */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Pawn Element */
+.pawn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rooms {
+    display: flex;
+    flex-direction: column;
 }
 
 /* Collaboration Controls (Microphone Spot & Buttons - Optional for some rooms) */
