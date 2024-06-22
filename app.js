@@ -27,7 +27,8 @@ async function init() {
 `;
     
     const settingsDiv = document.getElementById('settings-div');
-    const settings = new Settings(settingsDiv);
+    const store = await Store.create('zatt-store', 'zatt-db');
+    const settings = new Settings(settingsDiv, store);
 
     const header = new LyricsPhrase(document.getElementById('header'));
     header.setContent(`bpm = ${settings.get('bpm')}`); 

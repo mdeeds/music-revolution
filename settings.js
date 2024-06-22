@@ -6,27 +6,11 @@
 // quota.quota : 17,846,894,592
 
 class Settings {
-    constructor(containerDiv) {
+    constructor(containerDiv, store) {
         this.containerDiv = containerDiv;
-        this.settings = new Map();
-        this.loadSettings();
+        this.store = store;
         this.createSettingsUI();
         this.attachEventListeners();
-    }
-
-    loadSettings() {
-        const searchParams = new URLSearchParams(window.location.search);
-        for (const key of ['name', 'bpm', 'title', 'bars per line']) {
-            const urlValue = searchParams.get(key);
-            if (urlValue !== null) {
-                this.settings.set(key, urlValue);
-            } else {
-                // Fallback to localStorage if not found in URL
-                const value = localStorage.getItem(key) || "";
-                this.settings.set(key, value);
-            }
-        }
-        this.numberGetOr('bars per line', 4);
     }
 
     _getIdForKey(key) {
@@ -37,7 +21,8 @@ class Settings {
         this.settingsDiv = document.createElement('div');
         this.settingsDiv.classList.add('settings-hidden');
 
-        for (const [key, value] of this.settings.entries()) {
+        for (const key of ['name', 'bpm', 'title', 'bars per line']) {
+            let value = this.store.get(key) || "";
             const settingElement = document.createElement('div');
             settingElement.classList.add('setting');
             settingElement.innerHTML = `
@@ -60,11 +45,11 @@ class Settings {
     }
 
     get(key) {
-        return this.settings.get(key) || "";
+        return this.store.get(key) || "";
     }
 
     getOr(key, defaultValue) {
-        const result = this.settings.get(key);
+        const result = this.store.get(key);
         if (result) {
             return result;
         } else {
@@ -83,8 +68,7 @@ class Settings {
     }
 
     set(key, value) {
-        this.settings.set(key, value);
-        localStorage.setItem(key, value);
+        this.store.set(key, value);
         const input = this.containerDiv.querySelector(`.setting-value[data-key="${key}"]`);
         if (input) {
             input.value = value;
