@@ -1,9 +1,14 @@
+// This implements a write-through map which persists the key-value
+// pairs in an indexeddb. 'get' and 'set' operations are performed
+// synchronously in memory, and the 'set' operation will write through
+// to the database in the background. When creating an instance of the
+// store, it will populate the in-memory map with all of the key-value
+// pairs from the database.
 class Store {
     constructor(storeName, dbName) {
         this.storeName = storeName;
         this.dbName = dbName;
         this.inMemoryMap = new Map();
-        this.keys = [];
         this.db = null;
     }
 
@@ -44,9 +49,9 @@ class Store {
             const request = store.getAllKeys();
 
             request.onsuccess = (event) => {
-                this.keys = event.target.result;
+                const keys = event.target.result;
                 // Load values into the in-memory map from the database
-                const valueRequests = this.keys.map(key => {
+                const valueRequests = keys.map(key => {
                     return new Promise((resolve, reject) => {
                         const valueRequest = store.get(key);
                         valueRequest.onsuccess = (event) => {
@@ -69,7 +74,9 @@ class Store {
             };
         });
     }
-    
+
+    // Get is served from an in-memory map and can always be accessed
+    // synchronously
     get(key) {
         if (this.inMemoryMap.has(key)) {
             return this.inMemoryMap.get(key);
@@ -78,15 +85,15 @@ class Store {
         }
     }
 
+    // Set is a synchronous method - it does not return a promise.  It
+    // will write-through to the database, but this is done
+    // asynchronously and there is no need to wait for it.
     set(key, value) {
         this.inMemoryMap.set(key, value);
         this._writeThrough(key, value);
     }
 
     async _writeThrough(key, value) {
-        if (!this.keys.includes(key)) {
-            this.keys.push(key);
-        }
         const transaction = this.db.transaction(this.storeName, 'readwrite');
         const store = transaction.objectStore(this.storeName);
         store.put(value, key);
@@ -94,7 +101,6 @@ class Store {
 
     clear() {
         this.inMemoryMap.clear();
-        this.keys = [];
         this.db.transaction(this.storeName, 'readwrite').objectStore(this.storeName).clear();
     }
 }

@@ -14,9 +14,9 @@ class PhraseState extends Component {
   }
 
   // Static method to load a PhraseState from IDB
-  static async load(id) {
+    static load(store, id) {
     const phrase = new PhraseState(id, 'phrase');
-    const phraseData = await loadComponent(id);
+    const phraseData = store.get(id);
     phrase.data = phraseData;
     return phrase;
   }
@@ -38,9 +38,9 @@ class LyricsPhraseState extends PhraseState {
   }
 
   // Static method to load a LyricsPhraseState from IDB
-  static async load(id) {
+    static load(store, id) {
     const phrase = new LyricsPhraseState(id);
-    const phraseData = await loadComponent(id);
+    const phraseData = store.get(id);
     phrase.data = phraseData;
     return phrase;
   }
@@ -68,12 +68,12 @@ class LineState extends Component {
   }
 
   // Static method to load a LineState from IDB
-  static async load(id) {
+    static load(store, id) {
     const line = new LineState(id);
-    const lineData = await loadComponent(id);
+    const lineData = store.get(id);
     line.data = lineData;
     for (const phraseId of lineData.phrases) {
-      line.addPhrase(await PhraseState.load(phraseId));
+        line.addPhrase(PhraseState.load(store, phraseId));
     }
     return line;
   }
@@ -106,13 +106,13 @@ class SectionState extends Component {
     });
   }
 
-  // Static method to load a SectionState from IDB
-  static async load(id) {
+  // Static method to load a SectionState from Store
+    static load(store, id) {
     const section = new SectionState(id);
-    const sectionData = await loadComponent(id);
+    const sectionData = store.get(id);
     section.data = sectionData;
     for (const lineId of sectionData.lines) {
-      section.addLine(await LineState.load(lineId));
+        section.addLine(LineState.load(store, lineId));
     }
     return section;
   }
@@ -145,28 +145,14 @@ class SongState extends Component {
     });
   }
 
-  // Static method to load a SongState from IDB
-  static async load(id) {
-    const song = new SongState(id);
-    const songData = await loadComponent(id);
-    song.data = songData;
-    for (const sectionId of songData.sections) {
-      song.addSection(await SectionState.load(sectionId));
+  // Static method to load a SongState from Store
+    static load(store, id) {
+        const song = new SongState(id);
+        const songData = store.get(id);
+        song.data = songData;
+        for (const sectionId of songData.sections) {
+            song.addSection(SectionState.load(store, sectionId));
+        }
+        return song;
     }
-    return song;
-  }
 }
-
-
-// Example usage:
-async function example() {
-  // ... create and save the song state as before ...
-
-  // Load the song state using the class's static load method
-  const loadedSong = await SongState.load('song1'); 
-
-  // Now, loadedSong is a properly constructed SongState object with 
-  // all child sections, lines, and phrases loaded and reconstructed.
-  console.log(loadedSong);
-}
-
