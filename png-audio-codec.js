@@ -39,7 +39,7 @@ function encodeAudioAsPNG(audioData, height) {
     return canvas.toDataURL('image/png');
 }
 
-function decodePNGToAudio(pngDataUrl) {
+function decodePNGToAudio(pngDataUrl, length) {
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => {
@@ -50,7 +50,7 @@ function decodePNGToAudio(pngDataUrl) {
             ctx.drawImage(img, 0, 0);
 
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
-            const audioData = new Float32Array(img.width * img.height);
+            const audioData = new Float32Array(length);
 
             for (let i = 0; i < audioData.length; i++) {
                 const x = Math.floor(i / height);
