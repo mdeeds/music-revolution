@@ -1,10 +1,8 @@
-class PeerConnector {
+class PeerConnector extends EventTarget {
     constructor(sessionId) {
         this.sessionId = sessionId;
         this.otherIds = new Set();
         this.outboundConnections = new Map();
-        // State shared between all peers. The key is the peer's Id.
-        this.sharedState = new Map();
     }
 
     async start() {
@@ -20,7 +18,6 @@ class PeerConnector {
                 conn.on('open', () => {
                     bigMessage('Connected.');
                     console.log(`I am ${this.peer.id}`);
-                    this.sharedState.set(this.peer.id, {});
                     // Connected to existing session, send name
                     this.isServer = false;
                     this.outboundConnections.set(this.sessionId, conn);
@@ -44,7 +41,6 @@ class PeerConnector {
                     this.isServer = true;
                     this.peer.on('open', () => {
                         bigMessage(`Server ready.`);
-                        this.sharedState.set(this.peer.id, {});
                         resolve();
                     });
                 } else {
@@ -76,53 +72,20 @@ class PeerConnector {
                             this.outboundConnections.set(peerId, newConnection);
                         });
                     }
-                } else if (data.type === 'state-update') {
-                    this.sharedState.set(data.id, data.state);
-                    if (this.stateChangeCallback) {
-                        this.stateChangeCallback(data.id, data.state);
-                    }
                 } else {
-                    // Handle other data types or call the data handler
-                    if (this.dataHandler) {
-                        this.dataHandler(data);
-                    }
+                    // Dispatch 'data' event for other messages.
+                    const dataEvent = new CustomEvent('data', {
+                        detail: data },
+                    });
+                    this.dispatchEvent(dataEvent);
                 }
             });
         });
     }
 
-    setDataHandler(callback) {
-        this.dataHandler = callback;
-    }
-
-    // `callback` is called with two arguments: the sessionId owning
-    // the state that was changed, and the new value of the state
-    // object.
-    setStateChangeCallback(callback) {
-        this.stateChangeCallback = callback;
-    }
-
-    // This function is called to let the PeerConnector know that the
-    // state for this instance has been modified and it should broadcast
-    // the new state to all other peers.
-    broadcastState() {
-        this.broadcast({
-            type: 'state-update',
-            id: this.peer.id, state:
-            this.sharedState.get(this.peer.id)
-        });
-    }
-
-    getState() {
-        return this.sharedState.get(this.peer.id);
-    }
-
-    getOtherState(id) {
-        return this.sharedState.get(id);
-    }
-
     broadcast(data) {
-        console.log(`Broadcast: ${JSON.stringify(data)} to ${[...this.otherIds].join(", ")}`);
+        console.log(
+            `Broadcast: ${JSON.stringify(data)} to ${[...this.otherIds].join(", ")}`);
         // Send data to all known peers
         for (const peerId of this.otherIds) {
             if (peerId === this.peer.id) {
