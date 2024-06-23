@@ -15,11 +15,9 @@ async function init() {
 	  document.body.innerHTML = `
   <div id='settings-div'></div>
   <div class="container">
-    <div class="music-area">
-      <div class="composition" id="composition">
-        <div id=header></div>
-        <div class="line" id="first-line"></div>
-      </div>
+    <div class="composition" id="composition">
+      <div id=header></div>
+      <div class="line" id="first-line"></div>
     </div>
     <div class="collaboration-panel" id="collaboration-panel">
   </div>

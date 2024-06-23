@@ -17,6 +17,7 @@ async function getAudioSourceNode() {
 
 class WorkletRecorder extends EventTarget {
     constructor(source, controlsDiv, outputDiv) {
+        super();
         this.source = source;
         this.controlsDiv = controlsDiv;
         this.outputDiv = outputDiv;

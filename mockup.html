@@ -1,16 +1,44 @@
 <head>
   <title>Z-Score</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style2.css">
   <link rel="icon" type="image/jpeg" href="resources/favicon.jpeg">
 </head>
 <body>
-  <div id=main></div>
-  <script src='user-interface.js'></script>
-  <script src='settings.js'></script>
-  <script>
-    const ui = new UserInterface(document.getElementById('main'));
-    ui.addChordLine();
-    ui.addLyricLine();
-    ui.addNotationLine();
-  </script>
+  <div class='container'>
+    <div class='composition'>
+      <div class='header'>header</div>
+      <div class='line'>
+        <div class='staff'>=&4=</div>
+        <div class='lyrics'>Hello</div>
+      </div>
+    </div>
+    <div class='collaboration-panel'>
+      <div class='room'>
+        <div class='room-name'>Huddle</div>
+        <div class='seat-area'>
+          <div class='visitor-area'>
+            <div class='seat'>seat</div>
+            <div class='seat'>seat</div>
+            <div class='seat'>seat</div>
+            <div class='seat'>seat</div>
+          </div>
+        </div>            
+      </div>
+      <div class='room'>
+        <div class='room-name'>Studio 1</div>
+        <div class='seat-area'>
+          <div class='recording-area'>
+            <div class='rec'>rec</div>
+            <div class='play'>play</div>
+            <div class='seat'>seat</div>
+          </div>
+          <div class='visitor-area'>
+            <div class='seat'>seat</div>
+            <div class='seat'>seat</div>
+            <div class='seat'>seat</div>
+            <div class='seat'>seat</div>
+          </div>
+      </div>
+    </div>
+  </div>
 </body>

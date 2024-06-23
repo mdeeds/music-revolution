@@ -8,310 +8,94 @@
     src: url('resources/KleeOne-Regular.ttf') format('truetype');
 }
 
-
-/* Base styles */
-
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  background-color: #f7f7f7; /* Very light grey background */
-  font-family: 'KleeOne-Regular'
+    font-family: 'KleeOne-Regular'
 }
 
 .container {
-  display: flex;
-  width: 100vw;
-  height: 100vh;
+    display: flex;
 }
-
-/* Left side - Music Composition Area */
-
-.music-area {
-  flex: 3; /* Takes up 3/4 of the screen width */
-  background-color: #fff; /* White background for music area */
-  padding: 2vw; /* Padding around the edges */
-  display: flex; /* Stack buttons and music composition content vertically */
-  flex-direction: column;
-}
-
-.collaboration-panel {
-  flex: 1; /* Takes up 1/4 of the screen width */
-  background-color: #bbb; /* Light grey background for collaboration panel */
-  padding: 1vw; /* Padding around the edges */
-  display: flex; /* Rooms displayed horizontally */
-  flex-direction: column; /* Rooms stacked vertically */
-}
-
-
-/* Record, Play, Mute Buttons */
-
-.controls {
-  display: flex; /* Buttons displayed horizontally */
-  justify-content: space-between; /* Buttons spaced evenly */
-  margin-bottom: 1vw; /* Spacing below buttons */
-}
-
-button.control {
-  background-color: #ddd; /* Light grey background for buttons */
-  border: none; /* Remove default button border */
-  padding: 2px 2px; /* Padding for button text */
-  border-radius: 4px; /* Rounded corners for buttons */
-  cursor: pointer; /* Indicate clickable elements */
-}
-
-button.disabled {
-    color: #999;
-    opacity: 0.5; /* Reduce opacity for disabled buttons */
-    cursor: not-allowed; /* Indicate element is not interactive */
-}
-
-.mute-button {
-  color: gray; /* Grey for mute button */
-}
-
-/* Staff Notation & Waveforms */
-
-.staff-and-waveforms {
-  display: flex;
-  justify-content: space-between; /* Staff and waveforms aligned horizontally */
-  margin-bottom: 1vw; /* Spacing below staff */
-}
-
-.staff {
-  /* Styles for your staff notation implementation here */
-  width: 100%; /* Staff takes full width of music area */
-  font-family: 'MusiQwik';
-  background: #fff;
-  font-size: 3.5em;
-}
-
-.waveforms {
-  width: 100%; /* Waveforms take full width of staff area */
-  height: 1vw; /* Thin waveform lines */
-  background-color: #add8e6; /* Light blue for waveforms */
-  background: #fff;
-}
-
-/* Chords & Lyrics */
-
-.chords {
-  font-size: 0.8vw; /* Smaller font size for chords */
-  background: #fff;
-  display: flex;
-  justify-content: space-between; /* Align chords and lyrics horizontally */
-  margin-bottom: 1vw; /* Spacing below chords and lyrics */
-}
-
-.lyrics {
-  font-size: 1.4em; /* Slightly larger font for lyrics */
-  text-align: left; 
-  border-top: 1px solid #4ff; /* Light cyan top border */
-  border-bottom: 1px solid #4ff; /* Light cyan bottom border */
-  background: #fff;
-  display: flex;
-  justify-content: space-between; /* Align chords and lyrics horizontally */
-  margin-bottom: 1vw; /* Spacing below chords and lyrics */
-}
-
-/* Line & Phrase (Nested elements within line) */
 
 .composition {
-    background: #ddd;
+    margin: 5px;
+    padding: 5px;
+    background-color: #eee;
+    flex: 5;
 }
 
-.music-area {
-    background: #ccc;
+.header {
+    margin: 5px;
+    padding: 5px;
+    background-color: #ddd;    
 }
 
 .line {
-  display: flex; /* Phrases displayed horizontally within a line */
-  flex-direction: column; /* Phrases stacked vertically */
-  margin-bottom: 0.5vw; /* Spacing between lines */
-  height: 4vw; /* Defines a line as 4 bars of music */
-  border: 1px solid #ddd; /* Pencil-like border for lines */
-  background-color: #eee; /* White background for lines */
-  position: relative; /* Enable absolute positioning for child elements */
-  width: 80vw;
+    margin: 5px;
+    padding: 5px;
+    background-color: #ddd;    
 }
 
-.bar-line {
-  position: absolute; /* Absolutely positioned within the line */
-  left: 1vw;  /* Adjust for desired position within the measure */
-  top: 0; /* Start at the top of the line */
-  width: 1px; /* Thin line for the bar */
-  height: 100%; /* Span the entire height of the line */
-  background-color: #ddd; /* Pencil-like color for the line */
+.staff {
+    margin: 5px;
+    padding: 5px;
+    background-color: #ccc;    
+    font-family: 'MusiQwik';
+    font-size: 4em;
 }
 
-.phrase {
-  /* Styles for individual musical phrases here */
-  flex: 1; /* Phrases share available space within a line */
-  /* Removed border for phrase - it's now part of the line */
-  padding-bottom: 0.25vw; /* Padding below phrase content */
+.lyrics {
+    margin: 5px;
+    padding: 5px;
+    background-color: #ccc;    
 }
 
-/* Section (Nested element within line) */
-
-.section {
-  margin-bottom: 1vw; /* Spacing between sections */
+.collaboration-panel {
+    flex: 1;
+    margin: 5px;
+    padding: 5px;
+    background-color: #eee;
 }
 
-.section-label {
-  font-size: 0.8vw; /* Smaller font size for section labels */
-  font-weight: bold; /* Bold text for section labels */
-  margin-bottom: 0.5vw; /* Spacing below section label */
-  padding-left: 1vw; /* Indentation for section labels (visual hierarchy) */
-}
-
-/* Right side - Collaboration Panel */
-
-/* Collaboration Panel - Individual Collaborator */
-
-.collaborator {
-  display: flex;
-  align-items: center; /* Align collaborator info horizontally */
-  margin-bottom: 0.5vw; /* Spacing between collaborators */
-}
-
-.collaborator-avatar {
-  width: 1vw; /* Size of collaborator avatar (optional) */
-  height: 1vw; /* Size of collaborator avatar (optional) */
-  border-radius: 50%; /* Rounded avatar */
-  margin-right: 0.5vw; /* Spacing between avatar and name */
-}
-
-.collaborator-name {
-  font-size: 0.8vw; /* Font size for collaborator name */
-}
-
-.collaborator-status {
-  margin-left: 1vw; /* Spacing between name and status */
-}
-
-.online {
-  color: green; /* Green dot for online status */
-}
-
-/* Collaboration Panel Styles */
-
-/* Room Representation */
-
-/* Room Styles */
 .room {
-  display: flex; /* Microphone spot, seats, and controls (optional) */
-  flex-direction: column; /* Elements stacked vertically */
-  justify-content: flex-start; /* Align elements to the top */
-  align-items: center; /* Vertically center elements within a room */
-  width: 10vw; /* Adjust width as needed */
-  margin-bottom: 1vw; /* Spacing between rooms */
-  background-color: #fff; /* White background for each room */
-  border-radius: 4px; /* Rounded corners for rooms */
-  padding: 0.5vw 1vw; /* Padding inside each room */
-  border: 1px solid #ddd; /* Optional border */
+    margin: 5px;
+    padding: 5px;
+    background-color: #ddd;
 }
 
 .room-name {
-  font-weight: bold; /* Bold text for room names */
-  font-size: 0.8em; /* Slightly smaller font size */
-  width: 100%;
-  color: #0008;
+    margin: 5px;
+    padding: 5px;
+    background-color: #ccc;
 }
 
-/* Seat Area */
-.seat-area {
-  display: flex; /* Seats displayed horizontally */
-  flex-direction: column; /* Seats stacked vertically */
-  width: 100%;
-}
-
-/* Visitor Area */
-.visitor-area {
-  display: flex; /* Seats flow left to right */
-  justify-content: flex-start; /* Align to the left */
-  width: 100%;
-}
-
-/* Recording Area */
 .recording-area {
-  display: flex; /* rec, play, and micSeat displayed horizontally */
-  align-items: center; /* Vertically center elements */
-  width: 100%;
-}
-
-/* Seat Styles */
-.seat {
-  width: 3vw; /* Size of each seat icon */
-  height: 1.5vw; /* Size of each seat icon */
-  margin: 0.25vw 0; /* Spacing between seats */
-  border-radius: 0.75vw; /* Rounded seats */
-  background-color: #ddd; /* Light grey for available seats */
-  border: 1px solid #ddd; /* Optional border */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.occupied-seat {
-  background-color: #777; /* Darker grey for occupied seats */
-}
-
-/* Microphone Seat */
-.micSeat {
-  width: 1.5vw; /* Size of each seat icon */
-  height: 1.5vw; /* Size of each seat icon */
-  margin: 0.25vw 0; /* Spacing between seats */
-  border-radius: 0.75vw; /* Rounded seats */
-  background-color: #ddd; /* Light grey for available seats */
-  border: 1px solid #ddd; /* Optional border */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Record, Play Buttons */
-.rec, .play {
-  width: 2vw; /* Size of each button */
-  height: 1.5vw; /* Size of each button */
-  border-radius: 0.75vw; /* Rounded buttons */
-  background-color: #ddd; /* Light grey for buttons */
-  border: 1px solid #ddd; /* Optional border */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Pawn Element */
-.pawn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.rooms {
     display: flex;
-    flex-direction: column;
+    margin: 5px;
+    padding: 5px;
+    background-color: #bbb;
 }
 
-/* Collaboration Controls (Microphone Spot & Buttons - Optional for some rooms) */
-
-.collaboration-controls {
-  display: flex; /* Microphone spot and buttons displayed inline */
+.rec, .play {
+    margin: 5px;
+    padding: 5px;
+    background-color: #aaa;    
 }
 
-.collaboration-button {
-  background-color: #ddd; /* Light grey background for buttons */
-  border: none; /* Remove default button border */
-  padding: 0.25vw 0.5vw; /* Padding for button text */
-  border-radius: 4px; /* Rounded corners for buttons */
-  cursor: pointer; /* Indicate clickable elements */
+.seat-area {
+    margin: 5px;
+    padding: 5px;
+    background-color: #ccc;
 }
 
-.record-button {
-  color: red; /* Red for record button */
+.visitor-area {
+    margin: 5px;
+    padding: 5px;
+    background-color: #bbb;
+    display: flex;
 }
 
-.play-button {
-  color: green; /* Green for play button */
+.seat {
+    margin: 5px;
+    padding: 5px;
+    background-color: #aaa;
 }
-
