@@ -15,7 +15,7 @@ async function getAudioSourceNode() {
     return source;
 }
 
-class WorkletRecorder {
+class WorkletRecorder extends EventTarget {
     constructor(source, controlsDiv, outputDiv) {
         this.source = source;
         this.controlsDiv = controlsDiv;
@@ -139,6 +139,11 @@ class WorkletRecorder {
         canvasWrapper.addEventListener(
             'dragstart', this.handleDragStart.bind(this, canvasWrapper, waveformData));
         this.waveformCanvases.push(canvasWrapper);
+          // Dispatch 'sample' event after handling the waveform data
+          const sampleEvent = new CustomEvent('sample', {
+            detail: { waveformData: event.data.data },
+          });
+        this.dispatchEvent(sampleEvent);
     }
 
     handleDragStart(canvasWrapper, waveformData, event) {
